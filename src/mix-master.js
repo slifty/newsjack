@@ -147,6 +147,11 @@
         if (!focusedElement)
           return;
 
+		// Remove pointer hack so it doesn't appear in editor
+		focusedElement.style.cursor = null;
+		if($(focusedElement).attr("style") == "")
+			$(focusedElement).removeAttr("style");
+		
         // We need to remove any script tags in the element now, or else
         // we'll likely re-execute them.
         $(focusedElement).find("script").remove();

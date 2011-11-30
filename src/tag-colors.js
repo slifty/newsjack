@@ -4,17 +4,16 @@
   var $ = jQuery;
   
   var TAG_COLORS = [
-    "#C60C46",
-    "#00AEEF",
-    "#F3739B",
-    "#FF66FF",
-    "#E66124",
-    "#FFC328",
-    "#B2E725",
-    "#660066",
-    "#FF9900"
+    "#FFFFFF",
+    "#FFFFFF",
+    "#FFFFFF",
+    "#FFFFFF",
+    "#FFFFFF",
+    "#FFFFFF",
+    "#FFFFFF",
+    "#FFFFFF",
+    "#FFFFFF"
   ];
-
   var NUM_TAG_COLORS = TAG_COLORS.length;
 
   var TAG_COLOR_MAP = {

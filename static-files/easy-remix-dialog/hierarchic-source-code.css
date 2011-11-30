@@ -5,7 +5,6 @@ div.element {
   font-size: 9pt;
   color: rgba(0,0,0,0.75);
   border: 1px dotted black;
-  padding-bottom: 1.5em;
   margin-left: 0.5em;
   word-wrap: break-word;
 }
@@ -29,18 +28,19 @@ div.element > div.start, div.element > div.end {
 }
 
 div.element > div.start:before {
-  content: '<';
+  content: '';
 }
 
 div.element > div.start:after {
-  content: '>';
+  content: '';
 }
 
 div.element > div.start > div.name {
+	display: none;
 }
 
 div.element li {
-  display: inline;
+	list-style: none;
 }
 
 div.element > div.start > ul.attributes {
@@ -57,7 +57,7 @@ div.element > div.start > ul.attributes div.name:before {
 }
 
 div.element > div.start > ul.attributes div.name:after {
-  content: '=';
+  content: ':';
 }
 
 div.element > div.start > ul.attributes div.value {
@@ -65,12 +65,12 @@ div.element > div.start > ul.attributes div.value {
 }
 
 div.element > div.start > ul.attributes div.value:before {
-  content: '"';
+  content: '';
   color: rgba(255,255,255,0.7);
 }
 
 div.element > div.start > ul.attributes div.value:after {
-  content: '"';
+  content: '';
   color: rgba(255,255,255,0.7);
 }
 
@@ -83,14 +83,15 @@ div.element > div.end {
   position: absolute;
   right: 0px;
   bottom: 0px;
+  display: none;
 }
 
 div.element > div.end:before {
-  content: '</';
+  content: '';
 }
 
 div.element > div.end:after {
-  content: '>';
+  content: '';
 }
 
 div.text {

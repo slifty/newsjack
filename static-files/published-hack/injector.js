@@ -1,10 +1,5 @@
 (function() {
-  var topBarHTML = '<div class="hackpub-top-bar">' +
-    '<span class="desc">This page is a remix of <a class="original"></a> ' +
-    'using the <a href="" class="goggles">Web X-Ray Goggles</a>, part of ' +
-    'the <a href="http://hackasaurus.org">Hackasaurus</a> toolkit.</span>' +
-    '<div class="close-button"></div>' +
-    '</div>';
+  var topBarHTML = '';
 
   function whenScriptsLoaded() {
     $(document.head).append('<link rel="stylesheet" href="' +

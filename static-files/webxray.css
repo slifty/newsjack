@@ -83,6 +83,7 @@ div.webxray-help:hover {
 .webxray-hud {
   display: inline-block;
   pointer-events: none;
+  display:none;
 }
 
 .webxray-hud code {
@@ -111,17 +112,20 @@ div.webxray-help:hover {
 .webxray-overlay-label-top {
     top: 0px;
     left: 0px;
+	display:none;
 }
 
 .webxray-overlay-label-bottom {
     bottom: 0px;
     right: 0px;
+	display:none;
 }
 
 .webxray-overlay {
     position: absolute;
     pointer-events: none;
     z-index: 2147483644;
+    border: dashed 1px #333333;
 }
 
 /* A DOM element that has been deleted by the user, but which

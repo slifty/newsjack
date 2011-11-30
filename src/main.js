@@ -105,7 +105,7 @@
 
   $(window).ready(function() {
     if (typeof(console) != 'undefined') {
-      console.log("Initializing Web X-Ray Goggles built on " +
+      console.log("Initializing Page One Remix built on " +
                   buildMetadata.date + " (commit " +
                   buildMetadata.commit + ").");
     }

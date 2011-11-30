@@ -4,7 +4,7 @@
   var locale = "en";
 
   jQuery.localization.extend(locale, "hud-overlay", {
-    "default-html": "<span>Web X-Ray Goggles activated! Press ESC to deactivate.</span>",
+    "default-html": "<span>Let the Remixing Begin!</span>",
     "element": "element",
     "with": "with",
     "id": "id",
@@ -17,7 +17,7 @@
 
   jQuery.localization.extend(locale, "input", {
     "unload-blocked": 'You have made unsaved changes to this page.',
-    "link-click-blocked": 'If you would like to follow that link, please deactivate the goggles first by pressing ESC.'
+    "link-click-blocked": 'If you would like to follow that link, please deactivate the remixer first by pressing ESC.'
   });
 
   jQuery.localization.extend(locale, "command-manager", {
@@ -29,8 +29,8 @@
   });
 
   jQuery.localization.extend(locale, "mix-master", {
-    "too-big-to-change": "That element is too big for me to remix. Try selecting a smaller one!",
-    "too-big-to-remix-html": "<div>That <code>&lt;${tagName}&gt;</code> element is too big for me to remix. Try selecting a smaller one!</div>",
+    "too-big-to-change": "That element is too big to remix. Try selecting a smaller one!",
+    "too-big-to-remix-html": "<div>That element is too big to remix. Try selecting a smaller one!</div>",
     "deletion": "deletion",
     "replacement": "replacement"
   });
@@ -39,27 +39,27 @@
     "ok": "Commit changes",
     "nevermind": "Nevermind",
     "close": "Close",
-    "product-name": "X-Ray Goggles"
+    "product-name": "Page One Remix"
   });
 
   jQuery.localization.extend(locale, "mix-master-dialog", {
-    "html-header": "HTML Source Code",
+    "html-header": "Edit the News",
     "skeleton-header": "What Your Browser Sees",
-    "rendering-header": "What You See",
+    "rendering-header": "What The World Sees",
     "basic-source-tab": "Basic",
     "advanced-source-tab": "Advanced",
-    "title": "Remixer"
+    "title": "Define Your Agenda"
   });
   
   jQuery.localization.extend(locale, "uproot-dialog", {
-    "header": "Publish Your Remix",
+    "header": "Share Your Remix",
     "intro": "There are two ways you can publish your remix and share it with others.",
     "to-internet": "Publish To Internet",
     "to-internet-desc": "Instantly publish your remix to a URL that anyone can view.",
     "view-html": "View HTML Source",
     "view-html-desc": "Grab the HTML source of your remix and publish it yourself.",
     "publishing": "Publishing...",
-    "error": "Sorry, an error occurred. Please try again later.",
+    "error": "Sorry, an error occurred. Please email slifty@gmail.com and try again later.",
     "success": "Here is the URL for your remix that anyone can view.",
     "html-source": "Here's the HTML source code of your remix."
   });
@@ -81,7 +81,7 @@
 
   jQuery.localization.extend(locale, "command-descriptions", {
     "help": "This help reference",
-    "quit": "Deactivate goggles",
+    "quit": "Deactivate remixer",
     "remix": "Replace/remix selected element",
     "css-quasimode": "View/edit computed style of selected element",
     "remove": "Remove selected element",

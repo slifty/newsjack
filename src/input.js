@@ -19,6 +19,9 @@
     keys[alphabet[i]] = alphabet.charCodeAt(i);
 
   function isValidFocusTarget(target) {
+	var focusedHTML = $(target).html();
+	if(focusedHTML.length > 5000) return false; // Too big
+
     return (!$(target).hasClass('webxray-base'));
   }
 
@@ -262,14 +265,12 @@
       
       self.add({
         click: function(event) {
+          mixMaster.replaceFocusedElementWithDialog({
+            input: self,
+            dialogURL: jQuery.webxraySettings.url("easyRemixDialogURL"),
+            sendFullDocument: true
+          });
           if ($(event.target).closest('a').length) {
-            if (!touchesReceived) {
-              // This is just the result of a tap, which we can assume
-              // was intended to set the focus, not to click on a link,
-              // so don't bother with the transparent message.
-              var msg = jQuery.locale.get("input:link-click-blocked");
-              jQuery.transparentMessage($('<div></div>').text(msg));
-            }
             return true;
           }
         },
@@ -286,6 +287,7 @@
             return false;
           
           if (isValidFocusTarget(event.target)) {
+            event.target.style.cursor = null;
             focused.unfocus();
             return true;
           }
@@ -299,6 +301,7 @@
             return false;
 
           if (isValidFocusTarget(event.target)) {
+            event.target.style.cursor = "pointer";
             focused.set(event.target);
             return true;
           }
@@ -331,7 +334,7 @@
         RIGHT: function() { mixMaster.redo(); },
         UP: function() { focused.upfocus(); },
         DOWN: function() { focused.downfocus(); },
-        ESC: function() { if (onQuit) onQuit(); },
+        ESC: function() {  },
         DELETE: function() { mixMaster.deleteFocusedElement(); },
         I: function() { mixMaster.infoForFocusedElement(); },
         H: function() { self.showKeyboardHelp(); },
