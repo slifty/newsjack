@@ -11,7 +11,7 @@
 	$data = str_replace(".js","", $data);
 
 	// Add in the Page One Remix code
-	$injection = '<script type="text/javascript" src="http://localhost/pageoneremix/webxray.js" class="webxray"></script>';
+	$injection = '<script type="text/javascript" src="webxray.js" class="webxray"></script>';
 	$data = str_replace("</body>",$injection."</body>", $data);
 	
 	echo $data;
