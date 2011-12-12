@@ -6,10 +6,10 @@
 	$data = curl_exec($ch);
 	curl_close($ch);
 	
-	// Remove the obnoxious ad crap
-	$data = str_replace(".swf","", $data);
-	$data = str_replace(".js","", $data);
-
+	// Remove all scripts (force a "noscript" environment)
+	$data = preg_replace('/\<script.*?\>.*?\<\/script.*?\>/is',"", $data);
+	$data = preg_replace('/<.*noscript>/i',"", $data);
+	
 	// Add in the Page One Remix code
 	$injection = '<script type="text/javascript" src="webxray.js" class="webxray"></script>';
 	$data = str_replace("</body>",$injection."</body>", $data);
