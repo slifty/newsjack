@@ -91,4 +91,9 @@
     "dom-descend": "Descend to child element",
     "uproot": "Publish your remix"
   });
+
+  jQuery.localization.extend(locale, "introduction", {
+    "headline": 'Welcome to Page One Remix.',
+    "explanation": 'This is a tool designed to let you redefine the news. Click on anything and you can edit it. Headlines, pictures, links, text, whatever. When you\'re done click the publish button below to share your remix with the world.'
+  });
 })(jQuery);

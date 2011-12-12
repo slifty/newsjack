@@ -44,4 +44,9 @@
     "skeleton-header": "Lo que tu navegador ve",
     "rendering-header": "Lo que tú ves"
   });
+
+  jQuery.localization.extend(locale, "introduction", {
+    "headline": 'Welcome to Page One Remix.',
+    "explanation": 'This is a tool designed to let you define and share your own global news.  Just click on anything and you can edit it. Headlines, pictures, links, text, anything. Once you\'re done just hit the publish button below and share your version of the news.'
+  });
 })(jQuery);

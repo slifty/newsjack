@@ -8,6 +8,18 @@
     help.click(input.showKeyboardHelp);    
     $(hud.overlayContainer).append(help);
   }
+  
+  function addPublishButton(hud, input) {
+    var publish = $('<div class="webxray-base webxray-publish">Publish Remix</div>');
+    publish.click(function() {input.showUprootDialog(input)});    
+    $(hud.overlayContainer).append(publish);
+  }
+  
+  function addExplanation(hud, input) {
+    var explanation = $('<div class="webxray-base webxray-explanation"></div>');
+    explanation.html('<h1 class="webxray-base">' + jQuery.locale.get("introduction:headline") + '</h1><p class="webxray-base">' + jQuery.locale.get("introduction:explanation") + '</p>');
+    $(hud.overlayContainer).append(explanation);
+  }
 
   // If the user has made changes to the page, we don't want them
   // to be able to navigate away from it without facing a modal
@@ -72,7 +84,8 @@
         persistence: persistence,
         start: function() {
           persistence.loadHistoryFromDOM();
-          addHelpButton(hud, input);
+          addExplanation(hud, input);
+          addPublishButton(hud, input);
           $(document.body).append(hud.overlayContainer);
           focused.on('change', hud.onFocusChange);
           input.activate();

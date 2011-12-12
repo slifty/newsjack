@@ -326,6 +326,10 @@
         showKeyboardHelp: function() {
           var help = jQuery.createKeyboardHelpReference(self.keyboardHelp);
           jQuery.transparentMessage(help);
+        },
+        showUprootDialog: function(inputObject) {
+          persistence.saveHistoryToDOM();
+          jQuery.openUprootDialog(inputObject);
         }
       });
       
@@ -345,10 +349,7 @@
             sendFullDocument: true
           });
         },
-        P: function() {
-          persistence.saveHistoryToDOM();
-          jQuery.openUprootDialog(self);
-        }
+        P: function() { self.showUprootDialog(self) }
       });
 
       self.add(self.simpleKeyBindings.handlers);

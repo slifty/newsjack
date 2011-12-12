@@ -28,7 +28,7 @@
   text-indent: 0;
   visibility: visible;
   letter-spacing: normal;
-  font-family: "Helvetica Neue", sans-serif;
+  font-family: "Georgia", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-variant: normal;
@@ -59,9 +59,47 @@
   bottom: 0px;
   right: 0px;
   color: white;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(66, 66, 66, .9);
   z-index: 2147483645;
-  padding: 0.4em 1em 0.3em;
+  padding: 10px;
+}
+
+
+.webxray-explanation {
+	width:200px;
+}
+.webxray-explanation h1 {
+  color: #aaffff;
+  font-family: helvetica;
+  font-weight: bold;
+  font-size: 14px;
+}
+.webxray-explanation p {
+	font-family: helvetica;
+	margin: 5px 0px;
+	margin-bottom: 10px
+	
+}
+
+.webxray-publish {
+  width: 200px;
+  cursor: pointer;
+  font-family: Georgia;
+  padding: 10px 10px;
+  text-align: center;
+  border: solid 1px #333333;
+  background-color: #8ab300;
+  color: white;
+  font-size: 24px;
+}
+
+.webxray-publish:after {
+  content: ' »';
+}
+
+.webxray-publish:hover {
+  background: black;
+  color: white;
 }
 
 .webxray-help {
