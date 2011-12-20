@@ -1,0 +1,25 @@
+
+html, body {
+  font-family: georgia, "times new roman";
+  margin: 0px;
+  color: #41415b;
+  height: 100%;
+  /* If the browser doesn't support gradients, just use a white background. */
+  background-color: white;
+}
+
+h1 {
+  font-family: 'impact';
+  font-weight: normal;
+  font-size: 48px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+
+h2 {
+  font-family: Georgia, serif;
+  font-size: 24px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}

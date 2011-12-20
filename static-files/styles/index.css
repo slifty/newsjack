@@ -1,0 +1,55 @@
+#content {
+	width: 660px;
+	height: 250px;
+	margin: 50px auto;
+	padding: 30px;
+    border: dashed 1px #333333;
+	border-radius: 10px;
+}
+
+#paperlist {
+	list-style:none;
+}
+
+#paperlist li {
+	float: left;
+	height: 80px;
+	width: 150px;
+	padding: 10px;
+	margin: 10px;
+	border: 1px solid black;
+	border-radius: 5px;
+	text-align: center;
+	box-shadow: -5px 5px 5px #888;
+	cursor: pointer;
+}
+
+#paperlist li img {
+	max-height: 100;
+	max-width: 100;
+	vertical-align: middle;
+}
+
+#paperlist #cnn {
+	background-color: #CA0002;
+}
+
+#paperlist #fox {
+	background-color: #002465;
+}
+
+#paperlist #nytimes {
+	background-color: #ffffff;
+}
+
+#paperlist #cnn img {
+	margin-top: 8px;
+}
+
+#paperlist #fox img {
+	margin-top: ;
+}
+
+#paperlist #nytimes img {
+	margin-top: 30px;
+}

@@ -101,3 +101,22 @@ div.close-button:hover {
   background: black;
   color: white;
 }
+
+#fb_share {
+	background:#5f78ab url(http://static.ak.fbcdn.net/images/connect_sprite.png) 0px -60px no-repeat;
+	color:#fff;
+	display:block;
+	font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
+	font-weight:bold;
+	padding-left:50px;
+	padding-top: 13px;
+	margin:1px 1px 0 0;
+	text-shadow:none;
+	width: 170px;
+	height: 26px;
+}
+
+#twitter_share, #twitter_share img {
+	height: 40px;
+	margin-top: 10px;
+}
