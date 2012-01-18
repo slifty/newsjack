@@ -39,7 +39,7 @@
 	$data = preg_replace('/src=\"\/(.*?)\"/i', "src=\"".$url."/\\1\"", $data);
 	$data = preg_replace('/src=\'\/(.*?)\'/i', "src=\'".$url."/\\1\'", $data);
 	
-	// Add in the Page One Remix code
+	// Add in the NewsJack code
 	$injection = '<script type="text/javascript" src="webxray.js" class="webxray"></script>';
 	$data = str_replace("</body>",$injection."</body>", $data);
 	
