@@ -4,9 +4,9 @@
 	
 // DB Connection Settings
 	global $MYSQL_HOST, $MYSQL_USER, $MYSQL_PASS, $MYSQL_DB;
-	$MYSQL_HOST = "localhost";
-	$MYSQL_USER = "newsjack";
+	$MYSQL_HOST = "";
+	$MYSQL_USER = "";
 	$MYSQL_PASS = "";
-	$MYSQL_DB = "newsjack";
+	$MYSQL_DB = "";
 
 ?>
