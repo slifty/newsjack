@@ -33,7 +33,8 @@
             html: html,
             hackpubURL: jQuery.webxraySettings.url("hackpubURL"),
             originalURL: hackpubInfo.originalURL,
-            languages: jQuery.locale.languages
+            languages: jQuery.locale.languages,
+            remix_id: remix_id
           })
         });
       });

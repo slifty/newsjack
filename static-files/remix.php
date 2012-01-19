@@ -1,5 +1,10 @@
 <?php
-	//
+	
+	set_include_path($_SERVER['DOCUMENT_ROOT']);
+	include("models/DBConn.php");
+	include("models/Remix.php");
+	
+	// Make horribly inefficient regular expressions work
 	ini_set("pcre.backtrack_limit", 100000000);
 	
 	// Cookie Jar
@@ -39,8 +44,14 @@
 	$data = preg_replace('/src=\"\/(.*?)\"/i', "src=\"".$url."/\\1\"", $data);
 	$data = preg_replace('/src=\'\/(.*?)\'/i', "src=\'".$url."/\\1\'", $data);
 	
+	// Store the original version
+	$remix = new Remix();
+	$remix->setOriginalDOM($data);
+	$remix->setOriginalURL($url);
+	$remix->save();
+	
 	// Add in the NewsJack code
-	$injection = '<script type="text/javascript" src="webxray.js" class="webxray"></script>';
+	$injection = '<script type="text/javascript" src="webxray.js" class="webxray"></script><script type="text/javascript">var remix_id = '.$remix->getItemID().';</script>';
 	$data = str_replace("</body>",$injection."</body>", $data);
 	
 	echo $data;

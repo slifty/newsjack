@@ -122,7 +122,7 @@ function DeferredPublish(html, originalURL, hackpubURL) {
   });
 }
 
-function init(html, originalURL, hackpubURL) {
+function init(html, originalURL, hackpubURL, remix_id) {
   $(".to-internet.big-button").click(function() {
     $("#choose-publish-method").fadeOut(function() {
       $("#to-internet").fadeIn(function() {
@@ -137,6 +137,14 @@ function init(html, originalURL, hackpubURL) {
 			  $("#fb_share").attr("href", "http://www.facebook.com/sharer.php?src=sp&u=" + encodeURI(url));
 			  $("#twitter_share").attr("href","https://twitter.com/intent/tweet?text=Breaking%20News!&url=" + encodeURI(url));
               $("#to-internet .finished").fadeIn();
+			  $.ajax({
+					url: "storage.php",
+					method: "GET",
+					data: {
+						r: remix_id,
+						url: url
+					}
+				});
             });
           }, 
           function onFailure() {
@@ -181,7 +189,7 @@ if (top === self) {
     });  
     var data = JSON.parse(event.data);
     loadLocalization(data.languages, function() {
-      init(data.html, data.originalURL, data.hackpubURL);
+      init(data.html, data.originalURL, data.hackpubURL, data.remix_id);
     });
   }, false);
 </script>
