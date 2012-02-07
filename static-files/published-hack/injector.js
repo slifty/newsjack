@@ -10,9 +10,9 @@ var topBarHTML = '<div class="hackpub-top-bar">' +
                             path('top-bar.css') + '">');
     var topBar = $(topBarHTML);
 	topBar.hide();
-    var original = $("a.original", topBar);
-    original.attr("href", hackpubInfo.originalURL);
-    original.text(original[0].hostname);
+    //var original = $("a.original", topBar);
+    //original.attr("href", hackpubInfo.originalURL);
+    //original.text(original[0].hostname);
 
     function removeTopBar() {
       topBar.fadeOut(function() { topBar.remove(); });
