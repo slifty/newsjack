@@ -3,12 +3,29 @@
   top: 0px;
   left: 0px;
   right: 0px;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.75);
+  padding: 5px;
+  background: rgba(0, 0, 0, 1);
   color: white;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 9pt;
   z-index: 2000000000;
+}
+
+#newsjack-logo {
+	float: left;
+}
+
+#newsjack-logo img {
+	height: 150px;
+}
+
+#newsjack-logo .desc {
+	font-size: 24px;
+}
+
+.hackpub-top-bar h1 {
+	color: #AFF;
+	font-weight: bold;
+	font-size: 14px;
 }
 
 .hackpub-top-bar a {
