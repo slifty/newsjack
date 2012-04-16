@@ -46,7 +46,7 @@
   });
 
   jQuery.localization.extend(locale, "introduction", {
-    "headline": 'Welcome to Page One Remix.',
+    "headline": 'Welcome to NewsJack.',
     "explanation": 'This is a tool designed to let you define and share your own global news.  Just click on anything and you can edit it. Headlines, pictures, links, text, anything. Once you\'re done just hit the publish button below and share your version of the news.'
   });
 })(jQuery);

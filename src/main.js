@@ -105,7 +105,7 @@
 
   $(window).ready(function() {
     if (typeof(console) != 'undefined') {
-      console.log("Initializing Page One Remix built on " +
+      console.log("Initializing NewsJack built on " +
                   buildMetadata.date + " (commit " +
                   buildMetadata.commit + ").");
     }
