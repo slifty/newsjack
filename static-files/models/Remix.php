@@ -8,9 +8,9 @@
 #  This class is the model for a remix object
 ###
 
-include_once("Remix.php");
+include_once("FactoryObject.php");
 
-class Remix {
+class Remix extends FactoryObject{
 	
 	# Constants
 	// Initialization Types
@@ -19,7 +19,6 @@ class Remix {
 	
 	
 	# Instance Variables
-	private $itemID; // int
 	private $originalDOM; // string
 	private $originalURL; // string
 	private $remixDOM; // string
@@ -33,7 +32,7 @@ class Remix {
 	}
 	
 	# FactoryObject Methods
-	protected static function gatherData($objectString) {
+	protected static function gatherData($objectString, $start=FactoryObject::LIMIT_BEGINNING, $length=FactoryObject::LIMIT_ALL) {
 		$dataArrays = array();
 		
 		// Load an empty object
@@ -74,6 +73,10 @@ class Remix {
 							   unix_timestamp(remixes.date_created) AS dateCreated
 						  FROM remixes
 						 WHERE remixes.id IN (".$objectString.")";
+		if($length != FactoryObject::LIMIT_ALL) {
+			$query_string .= "
+						 LIMIT ".DBConn::clean($start).",".DBConn::clean($length);
+		}
 		
 		$result = $mysqli->query($queryString)
 			or print($mysqli->error);
@@ -173,8 +176,6 @@ class Remix {
 	
 	public function getDateCreated() { return $this->dateCreated; }
 	
-	public function getItemID() { return $this->itemID; }
-	
 	
 	# Setters
 	public function setOriginalDOM($str) { $this->originalDOM = $str; }
@@ -185,10 +186,5 @@ class Remix {
 	
 	public function setRemixURL($str) { $this->remixURL = $str; }
 	
-	private function setItemID($int) { $this->itemID = $int; }
-	
-	
-	# Core Methods
-	public final function isUpdate() { return ($this->getItemID() > 0); }
 }
 ?>

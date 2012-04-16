@@ -4,9 +4,29 @@
 		<link rel="stylesheet" href="styles/index.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	</head>
 	<body>
-		<div id="content">
+		<div class="hackpub-top-bar">
+			<div id="newsjack-logo"><a href="http://www.newsjack.in"><img src="http://www.newsjack.in/logos/newsjack.jpg" /></a></div>
 			<h1>Welcome to NewsJack</h1>
-			<h2>Pick a Site to Hack</h2>
+			<div id="newsjack-about">
+				<p>NewsJack is a media remixing tool built from Mozilla's <a href="http://hackasaurus.org/">Hackasaurus</a> by <a href="http://slifty.com">slifty</a> and <a href="http://schock.cc">schock</a>.  NewsJack is a project of MIT's <a href="http://civic.mit.edu">Center for Civic Media</a>.</p>
+			</div>
+			<div id="newsjack-license"><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">NewsJack</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</div>
+			<div id="newsjack-disclaimer">
+				<p>Sites appearing in NewsJack are not affiliated with the project in any way.</p>
+			</div>
+			<a href="http://github.com/slifty/newsjack"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/4c7dc970b89fd04b81c8e221ba88ff99a06c6b61/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f77686974655f6666666666662e706e67" alt="Fork me on GitHub"></a>
+		</div>
+		<div id="freeform" class="content">
+			<h2>Enter a Site to Remix</h2>
+			<div id="general_remix">
+				<form action="remix.php" method="GET">
+					<label for="url">URL:</label><input type="text/css" id="url" name="url"/>
+					<input type="submit" />
+				</form>
+			</div>
+		</div>
+		<div id="preform" class="content">
+			<h2>Pick a site to Remix</h2>
 			<ul id="paperlist">
 				<li id="cnn" ><a href="remix.php?url=http://www.cnn.com"><img src="logos/cnn.gif" alt="CNN" /></a></li>
 				<li id="fox" ><a href="remix.php?url=http://www.foxnews.com"><img src="logos/fox.png" alt="Fox News" /></a></li>

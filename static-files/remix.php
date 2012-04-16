@@ -10,8 +10,11 @@
 	// Cookie Jar
 	$ckfile = tempnam ("/tmp", "CURLCOOKIE");
 	
+	// Clean the URL
+	$url = isset($_GET['url'])?$_GET['url']:"";
+	$url = substr($url,0,7) == "http://"?$url:"http://".$url;
+	
 	// CURL
-	$url = isset($_GET['url'])?$_GET['url']:"http://www.nytimes.com";
 	$ch = curl_init();
 	curl_setopt($ch,CURLOPT_URL,$url);
 	curl_setopt ($ch, CURLOPT_COOKIEJAR, $ckfile); 
