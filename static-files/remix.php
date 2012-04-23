@@ -45,7 +45,6 @@
 	$data = preg_replace('/src=\".*\"(.*)dest_src=\"(.*)\"/i',"src=\"\\2\" \\1", $data);
 	$data = preg_replace('/dest_src=\"(.*)\"(.*)src=\".*\"/i',"src=\"\\1\" \\2", $data);
 	
-	
 	// General Image Fixes
 	$data = preg_replace('/src=\"\/(.*?)\"/i', "src=\"".$url."/\\1\"", $data);
 	$data = preg_replace('/src=\'\/(.*?)\'/i', "src=\'".$url."/\\1\'", $data);
@@ -55,6 +54,8 @@
 	$remix->setOriginalDOM($data);
 	$remix->setOriginalURL($url);
 	$remix->save();
+	
+	
 	
 	// Add in the NewsJack code
 	$injection = '<script type="text/javascript" src="webxray.js" class="webxray"></script><script type="text/javascript">var remix_id = '.$remix->getItemID().';</script>';

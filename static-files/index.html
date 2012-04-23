@@ -2,6 +2,17 @@
 	<head>
 		<link rel="stylesheet" href="styles/main.css" type="text/css" media="screen" title="no title" charset="utf-8">
 		<link rel="stylesheet" href="styles/index.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="styles/springMessage.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		<script src="jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scripts/springMessage.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function() {
+				$("#subscribe").springMessage({
+					heightOffset: 150,
+					minTopOffset: 300
+				});
+			});
+		</script>
 	</head>
 	<body>
 		<div class="hackpub-top-bar">
@@ -10,11 +21,27 @@
 			<div id="newsjack-about">
 				<p>NewsJack is a media remixing tool built from Mozilla's <a href="http://hackasaurus.org/">Hackasaurus</a> by <a href="http://slifty.com">slifty</a> and <a href="http://schock.cc">schock</a>.  NewsJack is a project of MIT's <a href="http://civic.mit.edu">Center for Civic Media</a>.</p>
 			</div>
-			<div id="newsjack-license"><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">NewsJack</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</div>
+			<div id="newsjack-license">
+				<p>NewsJack is free software licensed under the GNU GPL.</p>
+			</div>
 			<div id="newsjack-disclaimer">
 				<p>Sites appearing in NewsJack are not affiliated with the project in any way.</p>
 			</div>
 			<a href="http://github.com/slifty/newsjack"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/4c7dc970b89fd04b81c8e221ba88ff99a06c6b61/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f77686974655f6666666666662e706e67" alt="Fork me on GitHub"></a>
+		</div>
+		<div id="subscribe">
+			<div class="internalWrap">
+				<p>Want updates about NewsJack?</p>
+				<form action="http://slifty.us4.list-manage.com/subscribe/post?u=54f93d96b0f5edc18894fc700&amp;id=ab4e42c456" method="post" name="mc-embedded-subscribe-form" class="validate" target="_blank">
+					<ul>
+						<li><input type="email" value="" name="EMAIL" class="email" id="updates-email" placeholder="Enter your email" required></li>
+						<li><input type="submit" value="Subscribe" name="subscribe" id="subscribe_button" ></li>
+					</ul>
+				</form>
+				<br />
+				<p><a href="https://twitter.com/newsjackin" class="twitter-follow-button" data-show-count="false">Follow @newsjackin</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></p>
+			</div>
 		</div>
 		<div id="freeform" class="content">
 			<h2>Enter a Site to Remix</h2>
