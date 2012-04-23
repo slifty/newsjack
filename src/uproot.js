@@ -20,7 +20,7 @@
         var injectURL = jQuery.webxraySettings.url("hackpubInjectionURL");
         var hackpubInfo = {
           injectURL: injectURL,
-          originalURL: window.location.href,
+          originalURL: remix_url,
           submissionDate: (new Date()).toString()
         };
         html += '<script>hackpubInfo = ' + JSON.stringify(hackpubInfo) +

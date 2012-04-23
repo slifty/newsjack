@@ -31,3 +31,9 @@
 .hackpub-top-bar a {
   color: white;
 }
+
+.hackpub-top-bar .newsjack_original_source {
+	font-weight: bold;
+	font-size: 12px;
+	color: #AFF;
+}
