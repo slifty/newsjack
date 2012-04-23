@@ -92,7 +92,7 @@
 	
 	// General Image Fixes
 	$data = preg_replace('/src=\"\/(.*?)\"/i', "src=\"".$url."/\\1\"", $data);
-	$data = preg_replace('/src=\'\/(.*?)\'/i', "src=\'".$url."/\\1\'", $data);
+	$data = preg_replace('/src=\'\/(.*?)\'/i', "src='".$url."/\\1'", $data);
 	
 	// Store the original version
 	$remix = new Remix();
