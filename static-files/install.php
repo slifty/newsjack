@@ -51,6 +51,18 @@ switch($version) {
 		
 		echo("Updating app version\n");
 		$mysqli->query("UPDATE appinfo set version ='3';") or print($mysqli->error);
+		
+	case '3':
+		echo("Adding indexes to caches table\n");
+		$mysqli->query("ALTER TABLE caches
+							ADD INDEX cached_url (cached_url(255) ASC)") or print($mysqli->error);
+		
+		echo("Adding indexes to remixes table\n");
+		$mysqli->query("ALTER TABLE remixes
+							ADD INDEX original_url (original_url(255) ASC)") or print($mysqli->error);
+		
+		echo("Updating app version\n");
+		$mysqli->query("UPDATE appinfo set version ='4';") or print($mysqli->error);
 	
 	default:
 		echo("Finished updating the schema\n");
