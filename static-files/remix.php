@@ -121,6 +121,5 @@
 	$injection = '<script type="text/javascript" src="webxray.js" class="webxray"></script><script type="text/javascript">var remix_id = '.$remix->getItemID().';var remix_url = "'.$remix->getOriginalURL().'";</script>';
 	$data = str_replace("</body>",$injection."</body>", $data);
 	
-	
 	echo $data;
 ?>

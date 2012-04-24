@@ -63,6 +63,19 @@ switch($version) {
 		
 		echo("Updating app version\n");
 		$mysqli->query("UPDATE appinfo set version ='4';") or print($mysqli->error);
+		
+	case '4':
+		echo("Updating caches table\n");
+		$mysqli->query("ALTER TABLE caches
+							CHANGE COLUMN `cached_html` `cached_html` MEDIUMTEXT NULL DEFAULT NULL") or print($mysqli->error);
+
+		echo("Adding indexes to remixes table\n");
+		$mysqli->query("ALTER TABLE remixes
+							CHANGE COLUMN `original_dom` `original_dom` MEDIUMTEXT NULL DEFAULT NULL,
+							CHANGE COLUMN `remix_dom` `remix_dom` MEDIUMTEXT NULL DEFAULT NULL") or print($mysqli->error);
+		
+		echo("Updating app version\n");
+		$mysqli->query("UPDATE appinfo set version ='5';") or print($mysqli->error);
 	
 	default:
 		echo("Finished updating the schema\n");
