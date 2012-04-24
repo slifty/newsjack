@@ -91,8 +91,10 @@
 			$data = curl_exec($ch);
 			curl_close($ch);
 		}
-	
-	
+		
+		$url_parts = parse_url($url);
+		$url_base = $url_parts["scheme"]."://".$url_parts["host"];
+		
 		// Remove all scripts (force a "noscript" environment)
 		$data = preg_replace('/\<script.*?\>.*?\<\/script.*?\>/is',"", $data);
 		$data = preg_replace('/<.*noscript>/i',"", $data);
@@ -102,9 +104,16 @@
 		$data = preg_replace('/dest_src=\"(.*)\"(.*)src=\".*\"/i',"src=\"\\1\" \\2", $data);
 	
 		// General Image Fixes
-		$data = preg_replace('/src=\"\/(.*?)\"/i', "src=\"".$url."/\\1\"", $data);
-		$data = preg_replace('/src=\'\/(.*?)\'/i', "src='".$url."/\\1'", $data);
-	
+		$data = preg_replace('/src=\"\/(.*?)\"/i', "src=\"".$url_base."/\\1\"", $data);
+		$data = preg_replace('/src=\'\/(.*?)\'/i', "src='".$url_base."/\\1'", $data);
+		
+		// General Link Fixes
+		$data = preg_replace('/href=\"\/(.*?)\"/i', "src=\"".$url_base."/\\1\"", $data);
+		$data = preg_replace('/href=\'\/(.*?)\'/i', "src='".$url_base."/\\1'", $data);
+		
+		// CSS Link Fixes
+		$data = preg_replace('/\<link(.*?)text\/css(.*?)src\=(.*?)\/\>/i', "<link\\1text/css\\2href=\\3/>", $data);
+		
 		$cache->setCachedHTML($data);
 		$cache->save();
 	}
