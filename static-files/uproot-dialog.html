@@ -138,7 +138,7 @@ function init(html, originalURL, hackpubURL, remix_id) {
 				dataType: "json",
 				data: { url: url },
 				success: function(data, textStatus, jqXHR) { 
-					if(data.data.url != "http://bit.ly/undefined")
+					if(data.status_code == 200)
 						url = data.data.url;
 					$("#to-internet .loading").fadeOut(function() {
 						$(".published-url a").attr("href", url).text(url);
