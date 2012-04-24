@@ -1,63 +1,17 @@
-These are Web X-Ray Goggles, which provide a simple, easy way for non-technical people to inspect Web pages and learn about how they are put together.
+This project was built from Mozilla's Hackasaurus, which you can find by looking at the forks.
 
-To play with the current version of the goggles, check out [https://secure.toolness.com/webxray/][].
+## INSTALLING
+If you are only interested in hosting an instance of NewsJack then you only need the contents of the static-files directory.
 
-## Build System
+1) Plop those into a web server that runs PHP
+2) cd to the directory you set up
+3) cp config.default.php
+4) vi config.default.php
+5) php install.php
 
-The build system for Web X-Ray Goggles was inspired by jQuery. In fact, Web X-Ray Goggles are, in some sense, just a custom build of jQuery. The `src` directory contains files that will ultimately be concatenated or "compiled" into a single JavaScript file, and the `static-files` directory contains standalone files used by the goggles.
+And with that you should be all set.  Send any questions to info@newsjack.in
 
-## Prerequisites
-
-To develop the goggles, you'll need:
-
-* git
-* python
-
-## Installation
-
-First, check out the `webxray` repository:
-
-    git clone https://github.com/toolness/webxray.git
-
-To start a web server that dynamically serves the Web X-Ray Goggles bookmarklet and unit tests, run:
-
-    python go.py serve
-
-Alternatively, if you want to compile the `static-files/webxray.js` file, run:
-
-    python go.py compile
-
-  [https://secure.toolness.com/webxray/]: https://secure.toolness.com/webxray/
-
-## Reporting Bugs
-
-If you have any bugs to report, please file them in [Lighthouse][].
-
-  [Lighthouse]: http://hackasaurus.lighthouseapp.com/projects/66492-hackasaurus/
-
-## Creating a Localization
-
-It's possible to localize the goggles, although it's not currently as
-easy as it ought to be. The following steps assume that the localization
-is for `es` (Spanish); just replace this country code with whatever language
-you're creating a localization for.
-
-1. Copy `src/locale/en.js` to `src/locale/es.js` and edit it.
-2. Replace the line `var locale = "en"` with `var locale = "es"`.
-3. Translate all strings that appear to be English.
-4. Save the file and make sure it's encoded as UTF-8.
-
-Localizations are activated automatically at runtime by examining
-`navigator.language`. This can be manipulated in Firefox by changing
-the [Languages][] preference.
-
-  [Languages]: http://support.mozilla.com/en-US/kb/Options%20window%20-%20Content%20panel?s=language&r=1&as=s#w_languages
-
-## Updating JQuery
-
-Currently, the goggles build on JQuery 1.5. To update the repository's files to use a different version of JQuery, check out the [webxray-stable][] branch of JQuery and run the `export_to_webxray.py` script.
-
-  [webxray-stable]: https://github.com/toolness/jquery/tree/webxray-stable
+If you are interested in helping to code then for now you have to do some inspection on your own / ask me questions.  We'll have a better community set up eventually.
 
 ## LICENSE
 
