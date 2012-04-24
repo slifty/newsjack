@@ -20,4 +20,7 @@
 	$BITLY_API_USER = "";
 	$BITLY_API_KEY = "";
 
+// Cache Settings
+	global $CACHE_TIMEOUT;
+	$CACHE_TIMEOUT = 300; // in seconds
 ?>

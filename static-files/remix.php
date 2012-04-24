@@ -45,6 +45,9 @@
 	set_include_path($_SERVER['DOCUMENT_ROOT']);
 	include("models/DBConn.php");
 	include("models/Remix.php");
+	include("models/Cache.php");
+	
+	global $CACHE_TIMEOUT;
 	
 	// Make horribly inefficient regular expressions work
 	ini_set("pcre.backtrack_limit", 100000000);
@@ -57,19 +60,16 @@
 	$url = substr($url,0,7) == "http://"?$url:"http://".$url;
 	$url = get_final_url($url);
 	
-	// CURL
-	$ch = curl_init();
-	curl_setopt( $ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1" );
-	curl_setopt($ch,CURLOPT_URL,$url);
-	curl_setopt ($ch, CURLOPT_COOKIEJAR, $ckfile); 
-	curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
-	curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-	$data = curl_exec($ch);
-	curl_close($ch);
+	// Is this cached?
+	$cache = Cache::getObjectByURL($url);
 	
-	// NYTimes fixes
-	if(preg_match("/<meta http\-equiv=refresh content=\"15\;url\=\/\?(.*?)\"/" ,$data, $matches)) {
-		$url = $url."/?".$matches[1];
+	if(is_null($cache) || (time() - $cache->getDateCreated()) >= $CACHE_TIMEOUT) {
+		// Set up the cache
+		Cache::clearCache($url);
+		$cache = new Cache();
+		$cache->setCachedURL($url);
+		
+		// CURL
 		$ch = curl_init();
 		curl_setopt( $ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1" );
 		curl_setopt($ch,CURLOPT_URL,$url);
@@ -78,20 +78,38 @@
 		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
 		$data = curl_exec($ch);
 		curl_close($ch);
+	
+		// NYTimes fixes
+		if(preg_match("/<meta http\-equiv=refresh content=\"15\;url\=\/\?(.*?)\"/" ,$data, $matches)) {
+			$url = $url."/?".$matches[1];
+			$ch = curl_init();
+			curl_setopt( $ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1" );
+			curl_setopt($ch,CURLOPT_URL,$url);
+			curl_setopt ($ch, CURLOPT_COOKIEJAR, $ckfile); 
+			curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
+			curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+			$data = curl_exec($ch);
+			curl_close($ch);
+		}
+	
+	
+		// Remove all scripts (force a "noscript" environment)
+		$data = preg_replace('/\<script.*?\>.*?\<\/script.*?\>/is',"", $data);
+		$data = preg_replace('/<.*noscript>/i',"", $data);
+	
+		// Fox news fixes
+		$data = preg_replace('/src=\".*\"(.*)dest_src=\"(.*)\"/i',"src=\"\\2\" \\1", $data);
+		$data = preg_replace('/dest_src=\"(.*)\"(.*)src=\".*\"/i',"src=\"\\1\" \\2", $data);
+	
+		// General Image Fixes
+		$data = preg_replace('/src=\"\/(.*?)\"/i', "src=\"".$url."/\\1\"", $data);
+		$data = preg_replace('/src=\'\/(.*?)\'/i', "src='".$url."/\\1'", $data);
+	
+		$cache->setCachedHTML($data);
+		$cache->save();
 	}
 	
-	
-	// Remove all scripts (force a "noscript" environment)
-	$data = preg_replace('/\<script.*?\>.*?\<\/script.*?\>/is',"", $data);
-	$data = preg_replace('/<.*noscript>/i',"", $data);
-	
-	// Fox news fixes
-	$data = preg_replace('/src=\".*\"(.*)dest_src=\"(.*)\"/i',"src=\"\\2\" \\1", $data);
-	$data = preg_replace('/dest_src=\"(.*)\"(.*)src=\".*\"/i',"src=\"\\1\" \\2", $data);
-	
-	// General Image Fixes
-	$data = preg_replace('/src=\"\/(.*?)\"/i', "src=\"".$url."/\\1\"", $data);
-	$data = preg_replace('/src=\'\/(.*?)\'/i', "src='".$url."/\\1'", $data);
+	$data = $cache->getCachedHTML();
 	
 	// Store the original version
 	$remix = new Remix();
@@ -99,11 +117,10 @@
 	$remix->setOriginalURL($url);
 	$remix->save();
 	
-	
-	
 	// Add in the NewsJack code
 	$injection = '<script type="text/javascript" src="webxray.js" class="webxray"></script><script type="text/javascript">var remix_id = '.$remix->getItemID().';var remix_url = "'.$remix->getOriginalURL().'";</script>';
 	$data = str_replace("</body>",$injection."</body>", $data);
+	
 	
 	echo $data;
 ?>

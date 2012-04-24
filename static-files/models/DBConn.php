@@ -13,6 +13,7 @@ class DBConn {
 	// Clean types
 	const CLEAN_INPUT = "input";
 	const CLEAN_VALIDATION = "validation";
+	const CLEAN_HTML = "html";
 	
 	
 	# Static Variables
@@ -38,7 +39,7 @@ class DBConn {
 			$data = ltrim($data);
 			$data = rtrim($data);
 			//$data = htmlentities($data);
-			$data = nl2br($data, true);
+			//$data = nl2br($data, true);
 			
 			$dbConn = DBConn::connect();
 			$data = $dbConn->real_escape_string($data);

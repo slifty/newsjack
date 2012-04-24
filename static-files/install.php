@@ -41,6 +41,16 @@ switch($version) {
 		
 		echo("Updating app version\n");
 		$mysqli->query("UPDATE appinfo set version ='2';") or print($mysqli->error);
+		
+	case '2':
+		echo("Creating caches table\n");
+		$mysqli->query("CREATE TABLE caches (id int auto_increment primary key,
+											cached_html text,
+											cached_url text,
+											date_created datetime)") or print($mysqli->error);
+		
+		echo("Updating app version\n");
+		$mysqli->query("UPDATE appinfo set version ='3';") or print($mysqli->error);
 	
 	default:
 		echo("Finished updating the schema\n");

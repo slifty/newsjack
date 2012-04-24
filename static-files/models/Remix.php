@@ -118,15 +118,12 @@ class Remix extends FactoryObject{
 		
 		if($this->isUpdate()) {
 			// Update an existing record
-			echo("TEST");
 			$queryString = "UPDATE remixes
 							   SET remixes.original_dom = ".DBConn::clean($this->getOriginalDOM()).",
 								   remixes.original_url = ".DBConn::clean($this->getOriginalURL()).",
 								   remixes.remix_dom = ".DBConn::clean($this->getRemixDOM()).",
 								   remixes.remix_url = ".DBConn::clean($this->getRemixURL())."
 							 WHERE remixes.id = ".DBConn::clean($this->getItemID());
-							
-			echo($queryString);
 			
 			$mysqli->query($queryString);
 		} else {
