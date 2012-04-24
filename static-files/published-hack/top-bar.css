@@ -29,7 +29,8 @@
 }
 
 .hackpub-top-bar a {
-  color: white;
+	color: white;
+	text-decoration: underline;
 }
 
 .hackpub-top-bar .newsjack_original_source {
