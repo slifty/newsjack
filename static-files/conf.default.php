@@ -9,4 +9,15 @@
 	$MYSQL_PASS = "";
 	$MYSQL_DB = "";
 
+// Tracking API Settings
+	global $BITLY_API_ID, $BITLY_API_SECRET, $BITLY_API_USER, $BITLY_API_KEY;
+	
+	// App Key
+	$BITLY_API_ID = "";
+	$BITLY_API_SECRET = "";
+
+	// Personal Key
+	$BITLY_API_USER = "";
+	$BITLY_API_KEY = "";
+
 ?>

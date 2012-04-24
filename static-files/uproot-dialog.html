@@ -130,22 +130,32 @@ function init(html, originalURL, hackpubURL, remix_id) {
         var publish = DeferredPublish(html, originalURL, hackpubURL);
         jQuery.when(publish, timeout).then(
           function onSuccess(publishArgs) {
-            $("#to-internet .loading").fadeOut(function() {
-              var data = publishArgs[0];
-              var url = data['published-url'];
-              $(".published-url a").attr("href", url).text(url);
-			  $("#fb_share").attr("href", "http://www.facebook.com/sharer.php?src=sp&u=" + encodeURI(url));
-			  $("#twitter_share").attr("href","https://twitter.com/intent/tweet?text=Breaking%20News!&url=" + encodeURI(url));
-              $("#to-internet .finished").fadeIn();
-			  $.ajax({
-					url: "storage.php",
-					method: "GET",
-					data: {
-						r: remix_id,
-						url: url
-					}
-				});
-            });
+			var data = publishArgs[0];
+			var url = data['published-url'];
+			$.ajax({
+				url: "api/shorten.php",
+				method: "GET",
+				dataType: "json",
+				data: { url: url },
+				success: function(data, textStatus, jqXHR) { 
+					if(data.data.url != "http://bit.ly/undefined")
+						url = data.data.url;
+					$("#to-internet .loading").fadeOut(function() {
+						$(".published-url a").attr("href", url).text(url);
+						$("#fb_share").attr("href", "http://www.facebook.com/sharer.php?src=sp&u=" + encodeURI(url));
+						$("#twitter_share").attr("href","https://twitter.com/intent/tweet?text=Breaking%20News!&url=" + encodeURI(url));
+						$("#to-internet .finished").fadeIn();
+						$.ajax({
+							url: "storage.php",
+							method: "GET",
+							data: {
+								r: remix_id,
+								url: url
+							}
+						});
+					});
+				}
+			});
           }, 
           function onFailure() {
             $("#to-internet .failure").fadeIn();

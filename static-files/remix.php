@@ -67,7 +67,6 @@
 	$data = curl_exec($ch);
 	curl_close($ch);
 	
-	
 	// NYTimes fixes
 	if(preg_match("/<meta http\-equiv=refresh content=\"15\;url\=\/\?(.*?)\"/" ,$data, $matches)) {
 		$url = $url."/?".$matches[1];
