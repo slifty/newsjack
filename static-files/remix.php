@@ -108,8 +108,8 @@
 		$data = preg_replace('/src=\'\/(.*?)\'/i', "src='".$url_base."/\\1'", $data);
 		
 		// General Link Fixes
-		$data = preg_replace('/href=\"\/(.*?)\"/i', "src=\"".$url_base."/\\1\"", $data);
-		$data = preg_replace('/href=\'\/(.*?)\'/i', "src='".$url_base."/\\1'", $data);
+		$data = preg_replace('/href=\"\/(.*?)\"/i', "href=\"".$url_base."/\\1\"", $data);
+		$data = preg_replace('/href=\'\/(.*?)\'/i', "href='".$url_base."/\\1'", $data);
 		
 		// CSS Link Fixes
 		$data = preg_replace('/\<link(.*?)text\/css(.*?)src\=(.*?)\/\>/i', "<link\\1text/css\\2href=\\3/>", $data);
