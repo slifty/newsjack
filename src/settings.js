@@ -9,7 +9,7 @@
       return this.baseURI + this[name];
     },
     language: navigator.language,
-    baseURI: "",
+    baseURI: "hackasaurus/",
     cssURL: "webxray.css",
     preferencesURL: "preferences.html",
     easyRemixDialogURL: "easy-remix-dialog/index.html",
