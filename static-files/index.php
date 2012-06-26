@@ -3,8 +3,9 @@
 		<link rel="stylesheet" href="styles/main.css" type="text/css" media="screen" title="no title" charset="utf-8">
 		<link rel="stylesheet" href="styles/index.css" type="text/css" media="screen" title="no title" charset="utf-8">
 		<link rel="stylesheet" href="styles/springMessage.css" type="text/css" media="screen" title="no title" charset="utf-8">
-		<script src="jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scripts/jquery-1.7.2.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="scripts/springMessage.js" type="text/javascript" charset="utf-8"></script>
+
 		<script type="text/javascript">
 			$(function() {
 				$("#subscribe").springMessage({
@@ -31,8 +32,8 @@
 		<div id="preform" class="content">
 			<h2>Pick a site to Remix</h2>
 			<ul id="paperlist">
-				<li id="cnn" ><a href="remix.php?url=http://www.cnn.com"><img src="logos/cnn.gif" alt="CNN" /></a></li>
-				<li id="fox" ><a href="remix.php?url=http://www.foxnews.com"><img src="logos/fox.png" alt="Fox News" /></a></li>
+				<li id="cnn" ><a href="remix.php?url=http://www.cnn.com"><img src="http://i.cdn.turner.com/cnn/.e/img/3.0/global/header/hdr-main.gif" alt="CNN" /></a></li>
+				<li id="fox" ><a href="remix.php?url=http://www.foxnews.com"><img src="http://global.fncstatic.com/static/all/img/head/logo-foxnews-update.png" alt="Fox News" /></a></li>
 			</ul>
 		</div>
 		<div id="freeform" class="content">
