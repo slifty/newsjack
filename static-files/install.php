@@ -76,6 +76,46 @@ switch($version) {
 		
 		echo("Updating app version\n");
 		$mysqli->query("UPDATE appinfo set version ='5';") or print($mysqli->error);
+		
+	case '5':
+		echo("Creating locales table\n");
+		$mysqli->query("CREATE TABLE locales (id int auto_increment primary key,
+											hud_overlay_html text,
+											input_unload_blocked text,
+											mix_master_too_big_to_change text,
+											mix_master_too_big_to_remix_html text,
+											dialog_common_ok text,
+											dialog_common_nevermind text,
+											dialog_common_close text,
+											dialog_common_product_name text,
+											mix_master_html_header text,
+											mix_master_skeleton_header text,
+											mix_master_rendering_header text,
+											mix_master_basic_source_tab text,
+											mix_master_advanced_source_tab text,
+											mix_master_title text,
+											uproot_dialog_header text,
+											uproot_dialog_publishing text,
+											uproot_dialog_error text,
+											uproot_dialog_success text,
+											introduction_headline text,
+											introduction_explanation text,
+											date_created datetime)") or print($mysqli->error);
+
+		echo("Creating campaigns table\n");
+		$mysqli->query("CREATE TABLE campaigns (id int auto_increment primary key,
+											code varchar(8),
+											locale_id int,
+											logo_url varchar(255),
+											date_created datetime)") or print($mysqli->error);
+											
+		echo("Updating remixes table\n");
+		$mysqli->query("ALTER TABLE remixes
+			              ADD COLUMN campaign_id varchar(8) AFTER id,
+						  ADD INDEX campaign_id (campaign_id ASC)") or print($mysqli->error);
+		
+		echo("Updating app version\n");
+		$mysqli->query("UPDATE appinfo set version ='6';") or print($mysqli->error);
 	
 	default:
 		echo("Finished updating the schema\n");

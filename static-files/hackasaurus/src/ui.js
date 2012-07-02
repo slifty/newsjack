@@ -1,0 +1,130 @@
+(function(jQuery) {
+  "use strict";
+
+  var $ = jQuery;
+
+  function addHelpButton(hud, input) {
+    var help = $('<div class="webxray-base webxray-help">?</div>');
+    help.click(input.showKeyboardHelp);    
+    $(hud.overlayContainer).append(help);
+  }
+  
+  function addPublishButton(hud, input) {
+    var publish = $('<div class="webxray-base webxray-publish">Publish Remix</div>');
+    publish.click(function() {input.showUprootDialog(input)});    
+    $(hud.overlayContainer).append(publish);
+  }
+  
+  function addExplanation(hud, input) {
+    var explanation = $('<div class="webxray-base webxray-explanation"></div>');
+    explanation.html('<h1 class="webxray-base">' + jQuery.locale.get("introduction:headline") + '</h1><p class="webxray-base">' + jQuery.locale.get("introduction:explanation") + '</p>');
+    $(hud.overlayContainer).append(explanation);
+  }
+
+  // If the user has made changes to the page, we don't want them
+  // to be able to navigate away from it without facing a modal
+  // dialog.
+  function ModalUnloadBlocker(commandManager) {
+    function beforeUnload(event) {
+      if (commandManager.canUndo()) {
+        event.preventDefault();
+        return jQuery.locale.get("input:unload-blocked");
+      }
+    }
+
+    window.addEventListener("beforeunload", beforeUnload, true);
+
+    return {
+      unload: function() {
+        window.removeEventListener("beforeunload", beforeUnload, true);
+      }
+    };
+  }
+  
+  function canBeTouched() {
+    return ('ontouchstart' in window);
+  }
+  
+  jQuery.extend({
+    xRayUI: function xRayUI(options) {
+      var isUnloaded = false;
+      var hud = jQuery.hudOverlay();
+      var focused = jQuery.focusedOverlay({
+        useAnimation: true
+      });
+      var commandManager = jQuery.commandManager();
+      var mixMaster = jQuery.mixMaster({
+        hud: hud,
+        focusedOverlay: focused,
+        commandManager: commandManager
+      });
+      var persistence = jQuery.commandManagerPersistence(commandManager);
+      var mouseMonitor = jQuery.mouseMonitor();
+      var styleInfo = jQuery.styleInfoOverlay({
+        focused: focused,
+        commandManager: commandManager,
+        mouseMonitor: mouseMonitor
+      });
+      var input = jQuery.xRayInput({
+        focusedOverlay: focused,
+        styleInfoOverlay: styleInfo,
+        mixMaster: mixMaster,
+        commandManager: commandManager,
+        persistence: persistence,
+        eventSource: options.eventSource,
+        onQuit: function() {
+          self.emit('quit');
+        }
+      });
+      var touchToolbar = canBeTouched() ? jQuery.touchToolbar(input) : null;
+      var indicator = jQuery.blurIndicator(input, window);
+      var modalUnloadBlocker = ModalUnloadBlocker(commandManager);
+      
+      var self = jQuery.eventEmitter({
+        persistence: persistence,
+        start: function() {
+          persistence.loadHistoryFromDOM();
+          addExplanation(hud, input);
+          addPublishButton(hud, input);
+          $(document.body).append(hud.overlayContainer);
+          focused.on('change', hud.onFocusChange);
+          input.activate();
+          $(window).focus();
+        },
+        unload: function() {
+          if (!isUnloaded) {
+            isUnloaded = true;
+            focused.destroy();
+            focused = null;
+            input.deactivate();
+            input = null;
+            if (touchToolbar) {
+              touchToolbar.unload();
+              touchToolbar = null;
+            }
+            hud.destroy();
+            hud = null;
+            styleInfo.destroy();
+            styleInfo = null;
+            indicator = null;
+            mouseMonitor.unload();
+            mouseMonitor = null;
+            modalUnloadBlocker.unload();
+            modalUnloadBlocker = null;
+          }
+        },
+
+        // These exports are primarily for use by third-party code.
+        jQuery: jQuery,
+        focusedOverlay: focused,
+        hudOverlay: hud,
+        mixMaster: mixMaster,
+        styleInfoOverlay: styleInfo,
+        commandManager: commandManager,
+        input: input
+      });
+
+      return self;
+    }
+  });
+})(jQuery);

@@ -44,6 +44,7 @@
 	}
 	set_include_path($_SERVER['DOCUMENT_ROOT']);
 	include("models/DBConn.php");
+	include("models/Campaign.php");
 	include("models/Remix.php");
 	include("models/Cache.php");
 	
@@ -59,6 +60,10 @@
 	$url = isset($_GET['url'])?$_GET['url']:"";
 	$url = substr($url,0,7) == "http://"?$url:"http://".$url;
 	$url = get_final_url($url);
+	
+	// Check if this is a campaign
+	$campaign =  Campaign::getObjectByCode(isset($_GET['c'])?$_GET['c']:"");
+	
 	
 	// Is this cached?
 	$cache = Cache::getObjectByURL($url);
@@ -120,12 +125,14 @@
 	
 	// Store the original version
 	$remix = new Remix();
+	if($campaign != null)
+		$remix->setCampaignID($campaign->getItemID());
 	$remix->setOriginalDOM($data);
 	$remix->setOriginalURL($url);
 	$remix->save();
 	
 	// Add in the NewsJack code
-	$injection = '<script type="text/javascript" src="hackasaurus/webxray.js" class="webxray"></script><script type="text/javascript">var remix_id = '.$remix->getItemID().';var remix_url = "'.$remix->getOriginalURL().'";</script>';
+	$injection = '<script type="text/javascript" src="hackasaurus/webxray.js" class="webxray"></script><script type="text/javascript">var remix_id = '.$remix->getItemID().';var remix_url = "'.$remix->getOriginalURL().'";var remix_campaign="'.$campaign->getCode().'";</script>';
 	$data = str_replace("</body>",$injection."</body>", $data);
 	
 	echo $data;

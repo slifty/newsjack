@@ -19,6 +19,7 @@ class Remix extends FactoryObject{
 	
 	
 	# Instance Variables
+	private $campaignID; // int
 	private $originalDOM; // string
 	private $originalURL; // string
 	private $remixDOM; // string
@@ -39,6 +40,7 @@ class Remix extends FactoryObject{
 		if($objectString === Remix::INIT_EMPTY) {
 			$dataArray = array();
 			$dataArray['itemID'] = 0;
+			$dataArray['campaignID'] = 0;
 			$dataArray['originalDOM'] = "";
 			$dataArray['originalURL'] = "";
 			$dataArray['remixDOM'] = "";
@@ -52,6 +54,7 @@ class Remix extends FactoryObject{
 		if($objectString === Remix::INIT_DEFAULT) {
 			$dataArray = array();
 			$dataArray['itemID'] = 0;
+			$dataArray['campaignID'] = 0;
 			$dataArray['originalDOM'] = "";
 			$dataArray['originalURL'] = "";
 			$dataArray['remixDOM'] = "";
@@ -66,6 +69,7 @@ class Remix extends FactoryObject{
 		
 		// Load the object data
 		$queryString = "SELECT remixes.id AS itemID,
+							   remixes.campaign_id AS campaignID,
 							   remixes.original_dom AS originalDOM,
 							   remixes.original_url AS originalURL,
 							   remixes.remix_dom AS remixDOM,
@@ -84,6 +88,7 @@ class Remix extends FactoryObject{
 		while($resultArray = $result->fetch_assoc()) {
 			$dataArray = array();
 			$dataArray['itemID'] = $resultArray['itemID'];
+			$dataArray['campaignID'] = $resultArray['campaignID'];
 			$dataArray['originalDOM'] = $resultArray['originalDOM'];
 			$dataArray['originalURL'] = $resultArray['originalURL'];
 			$dataArray['remixDOM'] = $resultArray['remixDOM'];
@@ -98,6 +103,7 @@ class Remix extends FactoryObject{
 	
 	public function load($dataArray) {
 		$this->itemID = isset($dataArray["itemID"])?$dataArray["itemID"]:0;
+		$this->campaignID = isset($dataArray["campaignID"])?$dataArray["campaignID"]:"";
 		$this->originalDOM = isset($dataArray["originalDOM"])?$dataArray["originalDOM"]:"";
 		$this->originalURL = isset($dataArray["originalURL"])?$dataArray["originalURL"]:"";
 		$this->remixDOM = isset($dataArray["remixDOM"])?$dataArray["remixDOM"]:"";
@@ -119,7 +125,8 @@ class Remix extends FactoryObject{
 		if($this->isUpdate()) {
 			// Update an existing record
 			$queryString = "UPDATE remixes
-							   SET remixes.original_dom = ".DBConn::clean($this->getOriginalDOM()).",
+							   SET remixes.campaign_id = ".DBConn::clean($this->getCampaignID()).",
+								   remixes.original_dom = ".DBConn::clean($this->getOriginalDOM()).",
 								   remixes.original_url = ".DBConn::clean($this->getOriginalURL()).",
 								   remixes.remix_dom = ".DBConn::clean($this->getRemixDOM()).",
 								   remixes.remix_url = ".DBConn::clean($this->getRemixURL())."
@@ -130,12 +137,14 @@ class Remix extends FactoryObject{
 			// Create a new record
 			$queryString = "INSERT INTO remixes
 								   (remixes.id,
+									remixes.campaign_id,
 									remixes.original_dom,
 									remixes.original_url,
 									remixes.remix_dom,
 									remixes.remix_url,
 									remixes.date_created)
 							VALUES (0,
+									".DBConn::clean($this->getCampaignID()).",
 									".DBConn::clean($this->getOriginalDOM()).",
 									".DBConn::clean($this->getOriginalURL()).",
 									".DBConn::clean($this->getRemixDOM()).",
@@ -163,6 +172,8 @@ class Remix extends FactoryObject{
 	
 	
 	# Getters
+	public function getCampaignID() { return $this->campaignID; }
+	
 	public function getOriginalDOM() { return $this->originalDOM; }
 	
 	public function getOriginalURL() { return $this->originalURL; }
@@ -175,6 +186,8 @@ class Remix extends FactoryObject{
 	
 	
 	# Setters
+	public function setCampaignID($int) { $this->campaignID = $int; }
+	
 	public function setOriginalDOM($str) { $this->originalDOM = $str; }
 	
 	public function setOriginalURL($str) { $this->originalURL = $str; }
