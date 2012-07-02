@@ -196,5 +196,18 @@ class Remix extends FactoryObject{
 	
 	public function setRemixURL($str) { $this->remixURL = $str; }
 	
+	# Static Methods
+	public static function getObjectsByCampaignID($int) {
+		$query_string = "SELECT remixes.id as itemID 
+						   FROM remixes
+						  WHERE remixes.campaign_id = ".DBConn::clean($int);
+		return Remix::getObjects($query_string);
+	}
+	
+	public static function getAllObjects() {
+		$query_string = "SELECT remixes.id as itemID 
+						   FROM remixes";
+		return Remix::getObjects($query_string);
+	}
 }
 ?>

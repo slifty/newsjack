@@ -132,7 +132,7 @@
 	$remix->save();
 	
 	// Add in the NewsJack code
-	$injection = '<script type="text/javascript" src="hackasaurus/webxray.js" class="webxray"></script><script type="text/javascript">var remix_id = '.$remix->getItemID().';var remix_url = "'.$remix->getOriginalURL().'";var remix_campaign="'.$campaign->getCode().'";</script>';
+	$injection = '<script type="text/javascript" src="hackasaurus/webxray.js" class="webxray"></script><script type="text/javascript">var remix_id = '.$remix->getItemID().';var remix_url = "'.$remix->getOriginalURL().'";var remix_campaign="'.(isset($_GET['c'])?$_GET['c']:"").'";</script>';
 	$data = str_replace("</body>",$injection."</body>", $data);
 	
 	echo $data;

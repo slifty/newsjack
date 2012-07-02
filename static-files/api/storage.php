@@ -1,5 +1,5 @@
 <?php
-	set_include_path($_SERVER['DOCUMENT_ROOT']);
+	set_include_path("../");
 	include("models/DBConn.php");
 	include("models/Remix.php");
 
