@@ -312,32 +312,6 @@
           var help = jQuery.createKeyboardHelpReference(self.keyboardHelp);
           jQuery.transparentMessage(help);
         },
-<<<<<<< HEAD
-        showUprootDialog: function(inputObject) {
-          persistence.saveHistoryToDOM();
-          jQuery.openUprootDialog(inputObject);
-        }
-      });
-      
-      self.simpleKeyBindings.set({
-        LEFT: function() { mixMaster.undo(); },
-        RIGHT: function() { mixMaster.redo(); },
-        UP: function() { focused.upfocus(); },
-        DOWN: function() { focused.downfocus(); },
-        ESC: function() {  },
-        DELETE: function() { mixMaster.deleteFocusedElement(); },
-        I: function() { mixMaster.infoForFocusedElement(); },
-        H: function() { self.showKeyboardHelp(); },
-        R: function() {
-          mixMaster.replaceFocusedElementWithDialog({
-            input: self,
-            dialogURL: jQuery.webxraySettings.url("easyRemixDialogURL"),
-            sendFullDocument: true
-          });
-        },
-        P: function() { self.showUprootDialog(self) }
-      });
-=======
         addSimpleKeyBindings: function(bindings) {
           bindings.forEach(function(binding) {
             if (binding.cmd) {
@@ -439,7 +413,6 @@
           }
         }
       ]);
->>>>>>> hackasaurus/master
 
       self.add(self.simpleKeyBindings.handlers);
       self.add(touchInputHandlers(focused));
