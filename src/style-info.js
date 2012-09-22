@@ -17,9 +17,12 @@
     "font-style",
     "font-variant",
     "font-weight",
+    "height",
     "list-style-image",
     "list-style-position",
     "list-style-type",
+    "min-height",
+    "min-width",
     "text-align",
     "text-anchor",
     "text-decoration",
@@ -44,6 +47,7 @@
     "opacity",
     "visibility",
     "white-space",
+    "width",
     "vertical-align",
     "word-spacing",
     "word-wrap",
@@ -61,10 +65,15 @@
       };
   });
 
-  function makeCssValueEditable() {
+  function makeCssValueEditable(event) {
     var row = $(this);
     var widget = row.data("propertyWidget");
 
+    if (event.shiftKey) {
+      open('https://developer.mozilla.org/en/CSS/' + widget.name, 'info');
+      return;
+    }
+    
     if (widget.isBeingEdited())
       return;
 
@@ -95,8 +104,10 @@
     
     textField.blur(confirmChange);
     textField.keydown(function(event) {
-      if (event.keyCode == $.keys.ESC)
+      if (event.keyCode == $.keys.ESC) {
         revertToOriginal();
+        return false;
+      }
     });
     textField.keyup(function(event) {
       widget.previewValue(textField.val());
@@ -108,7 +119,8 @@
     });
   }
 
-  function buildPropertyWidget(element, row, style, parentStyle, name) {
+  function buildPropertyWidget(element, row, style, parentStyle, name,
+                               locale, hud) {
     var nameCell = $('<div class="webxray-name"></div>');
     var valueCell = $('<div class="webxray-value"></div>');
 
@@ -172,6 +184,16 @@
     };
     
     row.data("propertyWidget", self);
+    row.mouseover(function() {
+      var docKey = "css-property-docs:" + name;
+      if (locale.has(docKey)) {
+        var moreInfo = $('<span class="webxray-more-info"></span>')
+          .text(locale.get("style-info:more-info"));
+        $(hud.overlay).html(locale.get(docKey))
+          .append(moreInfo)
+          .find("a").css({textDecoration: "none"});
+      }
+    });
     self.refresh();
   }
 
@@ -204,17 +226,12 @@
       if (self.isBeingEdited())
         return;
       switch (event.keyCode) {
-        case $.keys.I:
-        var hover = overlay.find('.webxray-row:hover');
-        if (hover.length) {
-          var property = hover.data('propertyWidget').name;
-          var url = 'https://developer.mozilla.org/en/CSS/' + property;
-          open(url, 'info');
-          event.preventDefault();
-          event.stopPropagation();
-        }
+        case $.keys.ESC:
+        event.preventDefault();
+        event.stopPropagation();
+        self.close();
         break;
-
+        
         case $.keys.LEFT:
         case $.keys.RIGHT:
         input.handleEvent(event);
@@ -289,6 +306,7 @@
       var locale = options.locale || jQuery.locale;
       var propertyNames = options.propertyNames;
       var mouseMonitor = options.mouseMonitor;
+      var hud = options.hud;
       var body = options.body || document.body;
       var isVisible = false;
       var l10n = locale.scope("style-info");
@@ -308,7 +326,7 @@
         overlay.empty();
         
         if (primary) {
-          var info = $(primary).getStyleInfo(propertyNames);
+          var info = $(primary).getStyleInfo(propertyNames, locale, hud);
           var instructions = $('<div class="webxray-instructions"></div>');
           var close = $('<div class="webxray-close-button"></div>');
           instructions.html(l10n("tap-space-html"));
@@ -409,13 +427,14 @@
   });
   
   jQuery.fn.extend({
-    getStyleInfo: function getStyleInfo(propertyNames) {
+    getStyleInfo: function getStyleInfo(propertyNames, locale, hud) {
       var names = propertyNames || DEFAULT_PROPERTIES;
       var element = this.get(0);
       var window = element.ownerDocument.defaultView;
       var style = window.getComputedStyle(element);
       var parentStyle = null;
-      
+
+      locale = locale || jQuery.locale;
       if (element.nodeName != "HTML")
         parentStyle = window.getComputedStyle(element.parentNode);
 
@@ -425,7 +444,8 @@
       for (var i = 0; i < names.length + (NUM_COLS-1); i += NUM_COLS) {
         var row = $('<div class="webxray-row"></div>');
         for (var j = 0; j < NUM_COLS; j++)
-          buildPropertyWidget(element, row, style, parentStyle, names[i+j]);
+          buildPropertyWidget(element, row, style, parentStyle, names[i+j],
+                              locale, hud);
         info.append(row);
       }
 

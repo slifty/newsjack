@@ -101,6 +101,15 @@
     jQuery.when(prefsLoaded, cssLoaded).done(cb);
   }
 
+  function loadPlugins(cb) {
+    var pluginsToLoad = [];
+
+    jQuery.webxraySettings.url("pluginURLs").forEach(function(plugin) {
+      pluginsToLoad.push(jQuery.loadScript(plugin));
+    });
+    jQuery.when.apply(jQuery.when, pluginsToLoad).done(cb);
+  }
+  
   jQuery.extend({webxrayBuildMetadata: buildMetadata});
 
   $(window).ready(function() {
@@ -115,19 +124,23 @@
 
       var ui = jQuery.xRayUI({eventSource: document});
 
-      var welcomeMsg = $("<div></div>");
-      welcomeMsg.html(jQuery.locale.get("hud-overlay:default-html"));
-      jQuery.transparentMessage(welcomeMsg);
+      window.webxrayUI = ui;
+      loadPlugins(function() {
+        var welcomeMsg = $("<div></div>");
+        welcomeMsg.html(jQuery.locale.get("hud-overlay:default-html"));
+        jQuery.transparentMessage(welcomeMsg);
 
-      ui.start();
-      Webxray.triggerWhenLoaded(ui);
-      ui.on('quit', function() {
-        ui.persistence.saveHistoryToDOM();
-        $(document).trigger('unload');
-      });
-      $(document).unload(function() {
-        ui.unload();
-        removeOnUnload.remove();
+        ui.start();
+        Webxray.triggerWhenLoaded(ui);
+        ui.on('quit', function() {
+          ui.persistence.saveHistoryToDOM();
+          $(document).trigger('unload');
+          delete window.webxrayUI;
+        });
+        $(document).unload(function() {
+          ui.unload();
+          removeOnUnload.remove();
+        });
       });
     });
   });

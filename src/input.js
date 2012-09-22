@@ -40,8 +40,8 @@
     
     // Annoying that we have to do browser detection here, but unfortunately
     // we can't simply test for support of the 'pointer-events' CSS feature,
-    // as Opera supports it but only for SVG.
-    if (jQuery.browser.opera)
+    // as Opera and IE9 support it but only for SVG.
+    if (jQuery.browser.opera || jQuery.browser.msie)
       return function(event) {
         if (topmostNoPointerEvents(event.relatedTarget))
           return null;
@@ -265,12 +265,8 @@
       
       self.add({
         click: function(event) {
-          mixMaster.replaceFocusedElementWithDialog({
-            input: self,
-            dialogURL: jQuery.webxraySettings.url("easyRemixDialogURL"),
-            sendFullDocument: true
-          });
-          if ($(event.target).closest('a').length) {
+          if (isValidFocusTarget(event.target)) {
+            self.commandBindings['remix'].execute();
             return true;
           }
         },
@@ -310,23 +306,13 @@
 
       self.extend({
         simpleKeyBindings: jQuery.simpleKeyBindings(),
-        // TODO: This is violating DRY.
-        keyboardHelp: [
-          {key: 'H', cmd: 'help'},
-          {key: 'ESC', cmd: 'quit'},
-          {key: 'R', cmd: 'remix'},
-          {key: 'C', cmd: 'css-quasimode'},
-          {key: 'DELETE', cmd: 'remove'},
-          {key: 'LEFT', cmd: 'undo'},
-          {key: 'RIGHT', cmd: 'redo'},
-          {key: 'UP', cmd: 'dom-ascend'},
-          {key: 'DOWN', cmd: 'dom-descend'},
-          {key: 'P', cmd: 'uproot'}
-        ],
+        keyboardHelp: [],
+        commandBindings: {},
         showKeyboardHelp: function() {
           var help = jQuery.createKeyboardHelpReference(self.keyboardHelp);
           jQuery.transparentMessage(help);
         },
+<<<<<<< HEAD
         showUprootDialog: function(inputObject) {
           persistence.saveHistoryToDOM();
           jQuery.openUprootDialog(inputObject);
@@ -351,6 +337,109 @@
         },
         P: function() { self.showUprootDialog(self) }
       });
+=======
+        addSimpleKeyBindings: function(bindings) {
+          bindings.forEach(function(binding) {
+            if (binding.cmd) {
+              self.keyboardHelp.push(binding);
+              self.commandBindings[binding.cmd] = binding;
+            }
+            if (binding.execute) {
+              var simpleBinding = {};
+              simpleBinding[binding.key] = binding.execute;
+              self.simpleKeyBindings.set(simpleBinding);
+            }
+          });
+        }
+      });
+      
+      self.addSimpleKeyBindings([
+        {
+          key: 'H',
+          cmd: 'help',
+          execute: function() {
+            self.showKeyboardHelp();
+          }
+        },
+        {
+          key: 'ESC',
+          cmd: 'quit',
+          alwaysInToolbar: true,
+          execute: function() {
+            if (onQuit) onQuit();
+          }
+        },
+        {
+          key: 'R',
+          cmd: 'remix',
+          execute: function() {
+            mixMaster.replaceFocusedElementWithDialog({
+              input: self,
+              dialogURL: jQuery.webxraySettings.url("easyRemixDialogURL"),
+              sendFullDocument: true
+            });
+          }
+        },
+        {
+          key: 'C',
+          cmd: 'css-quasimode'
+        },
+        {
+          key: 'DELETE',
+          cmd: 'remove',
+          execute: function() {
+            mixMaster.deleteFocusedElement();
+          }
+        },
+        {
+          key: 'LEFT',
+          cmd: 'undo',
+          alwaysInToolbar: true,
+          execute: function() { mixMaster.undo(); }
+        },
+        {
+          key: 'RIGHT',
+          cmd: 'redo',
+          alwaysInToolbar: true,
+          execute: function() { mixMaster.redo(); }
+        },
+        {
+          key: 'UP',
+          cmd: 'dom-ascend',
+          execute: function() { focused.upfocus(); }
+        },
+        {
+          key: 'DOWN',
+          cmd: 'dom-descend',
+          execute: function() {
+            focused.downfocus();
+          }
+        },
+        {
+          key: 'B',
+          cmd: 'bug-report',
+          alwaysInToolbar: true,
+          execute: function() {
+            jQuery.openBugReportDialog(self);
+          }
+        },
+        {
+          key: 'P',
+          cmd: 'uproot',
+          alwaysInToolbar: true,
+          execute: function() {
+            persistence.saveHistoryToDOM();
+            jQuery.openUprootDialog(self);
+          }
+        },
+        {
+          key: 'I',
+          execute: function() {
+            mixMaster.infoForFocusedElement();
+          }
+        }
+      ]);
+>>>>>>> hackasaurus/master
 
       self.add(self.simpleKeyBindings.handlers);
       self.add(touchInputHandlers(focused));

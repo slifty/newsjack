@@ -174,10 +174,9 @@
         }
 
         if (sendFullDocument) {
-          $(document).uprootIgnoringWebxray(function (html, head, body) {
+          $(document).uprootIgnoringWebxray(function (html) {
             begin({
-              head: head,
-              body: body,
+              html: html,
               selector: $(document.body).pathTo(focused.getPrimaryElement())
             });
           });

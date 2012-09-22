@@ -6,6 +6,20 @@
   var RGB_REGEXP = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/;
 
   jQuery.extend({
+    // Load the given script. Returns a jQuery deferred that resolves
+    // when the script is loaded. Nothing happens if the
+    // script fails to load.
+    loadScript: function loadScript(url) {
+      var script = document.createElement('script');
+      var deferred = jQuery.Deferred();
+      script.setAttribute('src', url);
+      script.addEventListener("load", function() {
+        document.head.removeChild(script);
+        deferred.resolve();
+      }, false);
+      document.head.appendChild(script);
+      return deferred;
+    },
     // Return a string that is shortened to be the given maximum
     // length, with a trailing ellipsis at the end. If the string
     // isn't longer than the maximum length, the string is returned
@@ -38,8 +52,13 @@
     },
     // Like console.warn(), but only does anything if console exists.
     warn: function warn() {
-      if (window.console && window.console.warn)
-        window.console.warn.apply(window.console, arguments);
+      if (window.console && window.console.warn) {
+        if (window.console.warn.apply)
+          window.console.warn.apply(window.console, arguments);
+        else
+          // IE9's console.warn doesn't have an apply method...
+          window.console.warn(arguments[0] + " " + arguments[1]);
+      }
     }
   });
   
@@ -85,8 +104,30 @@
 
       for (var node = target; node && node != root; node = node.parentNode) {
         var n = $(node).prevAll(node.nodeName.toLowerCase()).length + 1;
-        parts.push(node.nodeName.toLowerCase() +
-                   ':nth-of-type(' + n + ')');
+        var id = $(node).attr("id");
+        var className = $(node).attr("class");
+        var classNames = [];
+        var selector = node.nodeName.toLowerCase();
+
+        // Class and id parts are based on jQuery-GetPath code.
+        if (typeof(id) != "undefined" && id.length)
+          selector += "#" + id;
+
+        if (typeof(className) != "undefined" && className.length)
+          jQuery.each(jQuery.trim(className).split(/[\s\n]+/), function() {
+            // Only keep the sane-looking class names. The CSS standard
+            // does prescribe escape patterns for odd characters in
+            // selectors, but jQuery's selector parser isn't completely
+            // standards-compliant, so we'll stick with the safe ones.
+            if (/^[A-Za-z0-9_\-]+$/.test(this))
+              classNames.push(this);
+          });
+        
+        if (classNames.length)
+          selector += "." + classNames.join('.');
+        
+        selector += ':nth-of-type(' + n + ')';
+        parts.push(selector);
       }
       
       parts.reverse();
@@ -128,21 +169,47 @@
 
       return $(ancestor);
     },
+    // Return the bounding client rectangle of the first element
+    // in the selection, taking CSS transforms into account if
+    // possible.
+    //
+    // The returned object has top/left/height/width properties.
+    bounds: function bounds() {
+      try {
+        var rect = this.get(0).getBoundingClientRect();
+        var window = this.get(0).ownerDocument.defaultView;
+        return {
+          top: rect.top + window.pageYOffset,
+          left: rect.left + window.pageXOffset,
+          height: rect.height,
+          width: rect.width
+        };
+      } catch (e) {
+        // Not sure if this will ever get called, but there's code in
+        // Tilt that deals with this kind of situation, and we'd like to
+        // gracefully fallback to code that we know works if the above
+        // fails. For more discussion, see bug #98:
+        //
+        // http://hackasaurus.lighthouseapp.com/projects/81472/tickets/98
+
+        var pos = this.offset();
+        return {
+          top: pos.top,
+          left: pos.left,
+          height: this.outerHeight(),
+          width: this.outerWidth()
+        };
+      }
+    },
     // Create and return a div that floats above the first
     // matched element.
     overlay: function overlay() {
-      var pos = this.offset();
-      var body = this.get(0).ownerDocument.body;
+      var html = this.get(0).ownerDocument.documentElement;
       var overlay = $('<div class="webxray-base webxray-overlay">' +
                       '&nbsp;</div>');
-      overlay.css({
-        top: pos.top,
-        left: pos.left,
-        height: this.outerHeight(),
-        width: this.outerWidth()
-      });
-      $(body).append(overlay);
 
+      overlay.css(this.bounds());
+      $(html).append(overlay);
       return overlay;
     },
     // Like jQuery.append(), but accepts an arbitrary number of arguments,
@@ -162,13 +229,7 @@
       var overlay = this;
 
       var hasNoStyle = $(target).attr('style') === undefined;
-      var pos = $(target).offset();
-      overlay.animate({
-        top: pos.top,
-        left: pos.left,
-        height: $(target).outerHeight(),
-        width: $(target).outerWidth()
-      }, cb);
+      overlay.animate($(target).bounds(), cb);
       if (hasNoStyle && $(target).attr('style') == '')
         $(target).removeAttr('style');
     },

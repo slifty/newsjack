@@ -41,10 +41,6 @@
     };
   }
   
-  function canBeTouched() {
-    return ('ontouchstart' in window);
-  }
-  
   jQuery.extend({
     xRayUI: function xRayUI(options) {
       var isUnloaded = false;
@@ -63,7 +59,8 @@
       var styleInfo = jQuery.styleInfoOverlay({
         focused: focused,
         commandManager: commandManager,
-        mouseMonitor: mouseMonitor
+        mouseMonitor: mouseMonitor,
+        hud: hud
       });
       var input = jQuery.xRayInput({
         focusedOverlay: focused,
@@ -76,7 +73,7 @@
           self.emit('quit');
         }
       });
-      var touchToolbar = canBeTouched() ? jQuery.touchToolbar(input) : null;
+      var touchToolbar = jQuery.touchToolbar(input);
       var indicator = jQuery.blurIndicator(input, window);
       var modalUnloadBlocker = ModalUnloadBlocker(commandManager);
       
@@ -98,10 +95,8 @@
             focused = null;
             input.deactivate();
             input = null;
-            if (touchToolbar) {
-              touchToolbar.unload();
-              touchToolbar = null;
-            }
+            touchToolbar.unload();
+            touchToolbar = null;
             hud.destroy();
             hud = null;
             styleInfo.destroy();
@@ -121,7 +116,8 @@
         mixMaster: mixMaster,
         styleInfoOverlay: styleInfo,
         commandManager: commandManager,
-        input: input
+        input: input,
+        modalUnloadBlocker: modalUnloadBlocker
       });
 
       return self;

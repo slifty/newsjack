@@ -100,6 +100,7 @@ div.publish-option p {
 </div>
 </div>
 <script src="jquery.min.js"></script>
+<script src="yepnope.1.0.2-min.js"></script>
 <script src="src/localization.js"></script>
 <script>
 function DeferredTimeout(ms) {
@@ -122,7 +123,7 @@ function DeferredPublish(html, originalURL, hackpubURL) {
   });
 }
 
-function init(html, originalURL, hackpubURL, remix_id) {
+function setupUI(html, originalURL, hackpubURL) {
   $(".to-internet.big-button").click(function() {
     $("#choose-publish-method").fadeOut(function() {
       $("#to-internet").fadeIn(function() {
@@ -173,6 +174,20 @@ function init(html, originalURL, hackpubURL, remix_id) {
  $(".to-internet.big-button").click();
 }
 
+function init(html, originalURL, hackpubURL) {
+  var ppxURL = "http://toolness.github.com/postmessage-proxied-xhr/";
+
+  yepnope({
+    test: jQuery.support.cors,
+    nope: [ppxURL + 'ppx.min.js', ppxURL + 'ppx.jquery.min.js'],
+    complete: function() {
+      if (!jQuery.support.cors)
+        jQuery.proxyAjaxThroughPostMessage(hackpubURL + 'ppx-server');
+      setupUI(html, originalURL, hackpubURL);
+    }
+  });
+}
+
 function loadLocalization(languages, cb) {
   jQuery.localization.loadLocale({
     languages: languages,
@@ -189,7 +204,7 @@ if (top === self) {
   $(window).ready(function() {
     var html = $("#sample-html").html();
     loadLocalization(["en", "es"], function() {
-      init(html, "http://foo.com/", "http://localhost:8001/");
+      init(html, "http://foo.com/", "http://hackpub.hackasaurus.org/");
     });
   });
 } else

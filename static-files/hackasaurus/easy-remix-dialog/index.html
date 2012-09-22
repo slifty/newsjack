@@ -2,13 +2,19 @@
 <meta charset="utf-8">
 <link rel="stylesheet" href="hierarchic-source-code.css">
 <link rel="stylesheet" id="webxray" href="../webxray.css">
+<link rel="stylesheet" href="../tipsy.css">
 <link rel="stylesheet" href="../dialog-common/stylesheets/base.css">
+<link rel="stylesheet" href="../codemirror2/lib/codemirror.css">
+<link rel="stylesheet" href="../dialog-common/stylesheets/jsbin-codemirror-theme.css">
 <title>Remix Dialog</title>
 <script src="../jquery.min.js"></script>
+<script src="../jquery.tipsy.js"></script>
 <script src="../jquery.scrollTo-min.js"></script>
-<script src="ace/ace.js"></script>
-<script src="ace/mode-html.js"></script>
-<script src="ace/theme-eclipse.js"></script>
+<script src="../codemirror2/lib/codemirror.js"></script>
+<script src="../codemirror2/mode/xml/xml.js"></script>
+<script src="../codemirror2/mode/javascript/javascript.js"></script>
+<script src="../codemirror2/mode/css/css.js"></script>
+<script src="../codemirror2/mode/htmlmixed/htmlmixed.js"></script>
 <script src="render-dom.js"></script>
 <script src="edit-dom.js"></script>
 <script src="html-editor.js"></script>
@@ -16,6 +22,7 @@
 <script src="../src/tag-colors.js"></script>
 <script src="../src/event-emitter.js"></script>
 <script src="../src/localization.js"></script>
+<script src="html-documentation.js"></script>
 <style>
 h2 {
   font-weight: normal;
@@ -52,26 +59,15 @@ span.sample {
   cursor: move;
 }
 
-/* Hide the horizontal scrollbar of the HTML editor. */
-.ace_scroller {
-  overflow: hidden;
-}
-
-/* Hide the vertical scrollbar of the HTML editor. */
-.ace_sb {
-  display: none;
-}
-
 #html-editor-container {
   position: relative;
   border: 1px dotted gray;
 }
 
-#html-editor { 
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  margin: 0;
+#html-editor-container .CodeMirror-scroll {
+  min-height: 300px;
+  height: auto;
+  overflow: hidden;
 }
 
 .tabs {
@@ -128,14 +124,6 @@ span.sample {
   -khtml-user-select: none;
 }
 
-textarea.fallback {
-  font-family: Monaco, "Lucida Console", monospace;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  border: none;
-}
-
 #dom-rendering input {
   text-overflow: ellipsis;
 }
@@ -151,6 +139,22 @@ textarea.fallback {
   font-size: inherit;
   background: transparent;
   border: inherit;
+}
+
+.mdn-link {
+  cursor: pointer !important;
+}
+
+.mdn-link:hover {
+  text-decoration: underline !important;
+}
+
+.tipsy {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.tipsy a {
+  color: inherit;
 }
 </style>
 <div class="container">
@@ -178,7 +182,6 @@ textarea.fallback {
 <script>
 "use strict";
 
-// TODO: consider automatically absolutifying src and href URLs.
 // TODO: add infinite undo/redo.
 // TODO: make it possible to create/delete attributes.
 
@@ -230,7 +233,13 @@ function startContinuousDynamicScale(selected, parentIframe, maxWidthElem) {
     }, options);
   }
   
-  scaleAndPan(true);
+  try {
+    scaleAndPan(true);
+  } catch (e) {
+    if (window.console && window.console.error)
+      window.console.error(e);
+  }
+  
   return setInterval(scaleAndPan, 500);
 }
 
@@ -242,6 +251,86 @@ jQuery.fn.extend({
   }
 });
 
+function addDocumentation(rendered) {
+  var BASE_MDN_HTML_URL = "https://developer.mozilla.org/en/HTML/";
+  var BASE_MDN_HTML_ELEM_URL = BASE_MDN_HTML_URL + "Element/";
+  
+  function getElementDocs() {
+    var elementName = $(this).text();
+
+    if (elementName.match(/^h[1-6]$/))
+      elementName = "h1";
+
+    var keyName = "html-element-docs:" + elementName;
+    if (jQuery.locale.has(keyName))
+      return jQuery.locale.get(keyName);
+    return "";
+  }
+  
+  function getAttrInfo(element) {
+    var attr = {
+      name: $(element).text(),
+      elementName: $(element).closest(".start").children(".name").text(),
+      docs: "",
+      mdnLink: ""
+    };
+    var globalAttrKeyName = "html-attribute-docs:" + attr.name;
+    var elementSpecificKeyName = "html-attribute-docs:" +
+                                 attr.elementName + "." + attr.name;
+    if (jQuery.locale.has(elementSpecificKeyName)) {
+      attr.docs = jQuery.locale.get(elementSpecificKeyName);
+      attr.mdnLink = BASE_MDN_HTML_ELEM_URL + attr.elementName + "#attr-" +
+                     attr.name;
+    } else if (jQuery.locale.has(globalAttrKeyName)) {
+      attr.docs = jQuery.locale.get(globalAttrKeyName);
+      attr.mdnLink = BASE_MDN_HTML_URL + "Global_attributes#attr-" +
+                     attr.name;
+    }
+    return attr;
+  }
+  
+  // Ugh, our CSS styling makes space before and the '=' after
+  // an attribute acquire the same hover style as the attribute
+  // name itself, which looks nasty, so we'll wrap the attribute
+  // name's text in an additional span and put our hover/click
+  // styling/handlers on that.
+  // TODO: Make it an anchor tag, not a span!
+  rendered.find("ul.attributes > li > .name").each(function() {
+    var name = $(this).text();
+    var wrappedName = $("<span></span>").text(name);
+    $(this).empty().append(wrappedName);
+  });
+  
+  rendered.find("ul.attributes > li > .name span").tipsy({
+    html: false,
+    gravity: 'nw',
+    title: function() {
+      return getAttrInfo(this).docs;
+    }
+  }).click(function() {
+    var url = getAttrInfo(this).mdnLink;
+    if (url)
+      window.open(url, "info");
+  }).addClass("mdn-link");
+  
+  rendered.find(".start > .name").tipsy({
+    html: true,
+    gravity: 'w',
+    title: getElementDocs
+  });
+
+  rendered.find(".end > .name").tipsy({
+    html: true,
+    gravity: 'e',
+    title: getElementDocs
+  });
+  
+  // TODO: These should really be anchor tags, not click handlers.
+  rendered.find(".start > .name, .end > .name").click(function() {
+    window.open(BASE_MDN_HTML_ELEM_URL + $(this).text(), "info");
+  }).addClass("mdn-link");
+}
+
 function makeEditableDom(selected, parent) {
   var rendered = selected.renderDom();
 
@@ -250,6 +339,7 @@ function makeEditableDom(selected, parent) {
 
   var editables = rendered.find(".text, .attributes .value");
   editables.makeTextEditable();
+  addDocumentation(rendered);
 }
 
 function makeHtmlEditor(container, selected) {
@@ -302,14 +392,13 @@ jQuery.extend({
 function createDialog(data) {
   var previewDoc = $("#preview").contents();
   var stylesheet = $('<link rel="stylesheet"></link>');
-
-  // TODO: We need to be able to set the doctype too,
-  // for full fidelity to the original page.
-  previewDoc.find("head").html(data.startHTML.head);
   stylesheet.attr('href', $("link#webxray").get(0).href);
+
+  previewDoc[0].open();
+  previewDoc[0].write(data.startHTML.html);
+  previewDoc[0].close();
   previewDoc.find("head").append(stylesheet);
-  previewDoc.find("body").html(data.startHTML.body);
-  
+
   // The selector has to be relative to the body element;
   // for some reason, the nth-of-type CSS selector doesn't
   // work for html and body elements in iframes.
@@ -369,6 +458,7 @@ $(window).ready(function() {
       path: "../src/locale/",
       languages: data.languages,
       complete: function(locale) {
+        jQuery.locale = locale;
         $(document.body).localize(locale, "mix-master-dialog");
         loadDialog(data);
       }
@@ -412,20 +502,15 @@ $(window).ready(function() {
       window.parent.postMessage(JSON.stringify(data), "*");
     }
   } else {
-    var iframe = $('<iframe src="sample.html"></iframe>');
-    $(document.body).append(iframe);
-    iframe.hide();
-    iframe.load(function() {
-      var doc = iframe.contents();
+    var req = jQuery.get("sample.html", function(data) {
       onMessage({
         languages: ["en", "es"],
         startHTML: {
           selector: "#sample",
-          head: doc.find("head").html(),
-          body: doc.find("body").html()
+          html: data
         }
       });
-    });
+    }, "text");
 
     sendMessage = function fakeSendMessage(data) {
       alert("Sending the following to parent window: " +

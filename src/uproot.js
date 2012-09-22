@@ -7,9 +7,9 @@
     if (!doctype)
       return '';
     var tag = '<!DOCTYPE ' + doctype.name;
-    if (doctype.publicId.length)
+    if (doctype.publicId && doctype.publicId.length)
       tag += ' PUBLIC "' + doctype.publicId + '"';
-    if (doctype.systemId.length)
+    if (doctype.systemId && doctype.systemId.length)
       tag += ' "' + doctype.systemId + '"';
     return tag += '>';
   }
@@ -75,11 +75,9 @@
           var doctype = makeDoctypeTag(document.doctype);
           var html = doctype + '\n<html>' +
                      document.documentElement.innerHTML + '</html>';
-          var head = document.head.innerHTML;
-          var body = document.body.innerHTML;
           removal.undo();
           $(base).remove();
-          cb.call(elem, html, head, body);
+          cb.call(elem, html);
         }, 0);
     }
   });

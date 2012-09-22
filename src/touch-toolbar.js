@@ -3,6 +3,10 @@
   
   var $ = jQuery;
   
+  function canBeTouched() {
+    return ('ontouchstart' in window);
+  }
+
   function makeButton(glyph, text, cb) {
     var button = $(
       '<div class="webxray-toolbar-button">' +
@@ -16,63 +20,33 @@
       glyphDiv.addClass('webxray-toolbar-button-glyph-tiny');
     $('.webxray-toolbar-button-text', button).text(text);
     button.find('*').andSelf().addClass('webxray-base');
-    button.bind('touchstart touchmove', function(event) {
+    button.bind('touchstart touchmove click', function(event) {
       event.preventDefault();
       cb.call(this);
     });
     return button;
   }
-  
-  function makeFakeEvent(props) {
-    var fakeEvent = {
-      altKey: false,
-      ctrlKey: false,
-      altGraphKey: false,
-      metaKey: false,
-      preventDefault: function() {},
-      stopPropagation: function() {}      
-    };
-    jQuery.extend(fakeEvent, props);
-    return fakeEvent;
-  }
-  
+    
   jQuery.extend({
-    touchToolbar: function(input) {
-      function makeKeydown(key) {
-        return function() {
-          input.handleEvent(makeFakeEvent({
-            type: "keydown",
-            keyCode: jQuery.keys[key],            
-          }));
-        }
-      }
-
-      function makeKeyToggle(key) {
-        var isPressed = false;
-        
-        return function() {
-          isPressed = !isPressed;
-          $(this).toggleClass('webxray-toolbar-button-toggled');
-          input.handleEvent(makeFakeEvent({
-            type: isPressed ? "keydown" : "keyup",
-            keyCode: jQuery.keys[key],            
-          }));
-        }
-      }
+    touchToolbar: function(input, locale, platform) {
+      locale = locale || jQuery.locale;
+      platform = platform || navigator.platform;
 
       var toolbar = $('<div class="webxray-base webxray-toolbar"></div>');
+      var keyNames = locale.scope('key-names');
+      var shortDescriptions = locale.scope('short-command-descriptions');
 
-      // TODO: This is a DRY violation.
-      makeButton('r', 'remix', makeKeydown('R')).appendTo(toolbar);
-      makeButton('del', 'remove', makeKeydown('DELETE')).appendTo(toolbar);
-      makeButton('c', 'CSS', makeKeyToggle('C')).appendTo(toolbar);
-      makeButton('↑', 'ascend', makeKeydown('UP')).appendTo(toolbar);
-      makeButton('↓', 'descend', makeKeydown('DOWN')).appendTo(toolbar);
-      makeButton('←', 'undo', makeKeydown('LEFT')).appendTo(toolbar);      
-      makeButton('→', 'redo', makeKeydown('RIGHT')).appendTo(toolbar);      
-      makeButton('p', 'publish', makeKeydown('P')).appendTo(toolbar);      
-      makeButton('esc', 'quit', makeKeydown('ESC')).appendTo(toolbar);
+      input.keyboardHelp.forEach(function(binding) {
+        if (binding.execute && (canBeTouched() || binding.alwaysInToolbar))
+          makeButton(jQuery.nameForKey(binding.key, locale, platform),
+                     shortDescriptions(binding.cmd), function() {
+                       binding.execute();
+                     }).appendTo(toolbar);
+      });
+      
       toolbar.appendTo(document.body);
+      input.on('activate', function() { toolbar.fadeIn(); });
+      input.on('deactivate', function() { toolbar.fadeOut(); });
       
       return {
         unload: function() {
