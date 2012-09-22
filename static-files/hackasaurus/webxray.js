@@ -6,7 +6,7 @@ var window = originalWindow;
 var document = window.document;
 
 // This value is computed at build time.
-var buildMetadata = {"date": "Sun Apr 29 21:19:53 2012", "commit": "e7f70880e267c051ce3d6ee7fdeeac9f86c2a352"};
+var buildMetadata = {"date": "Tue Jul  3 14:20:20 2012", "commit": "cb57e66200895af62f9f43ce96432ca91eba146b"};
 
 var jQuery = (function() {
 
@@ -8415,7 +8415,7 @@ var Webxray = (function() {
 
   jQuery.localization.extend(locale, "introduction", {
     "headline": 'Welcome to NewsJack.',
-    "explanation": 'This is a tool designed to let you redefine the news. Click on anything and you can edit it. Headlines, pictures, links, text, whatever. When you\'re done click the publish button below to share your remix with the world.'
+    "explanation": 'This is a tool designed to let you redefine the news. Click on anything and you can edit it. Headlines, pictures, links, text, whatever. When you\'re done click the button below to share your remix with the world.'
   });
 })(jQuery);(function(jQuery) {
   "use strict";
@@ -8532,7 +8532,7 @@ var Webxray = (function() {
       return this.baseURI + this[name];
     },
     language: navigator.language,
-    baseURI: "",
+    baseURI: "hackasaurus/",
     cssURL: "webxray.css",
     preferencesURL: "preferences.html",
     easyRemixDialogURL: "easy-remix-dialog/index.html",
@@ -10844,7 +10844,7 @@ var Webxray = (function() {
   }
   
   function addPublishButton(hud, input) {
-    var publish = $('<div class="webxray-base webxray-publish">Publish Remix</div>');
+    var publish = $('<div class="webxray-base webxray-publish">Share Remix</div>');
     publish.click(function() {input.showUprootDialog(input)});    
     $(hud.overlayContainer).append(publish);
   }

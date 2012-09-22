@@ -10,7 +10,7 @@
   }
   
   function addPublishButton(hud, input) {
-    var publish = $('<div class="webxray-base webxray-publish">Publish Remix</div>');
+    var publish = $('<div class="webxray-base webxray-publish">Share Remix</div>');
     publish.click(function() {input.showUprootDialog(input)});    
     $(hud.overlayContainer).append(publish);
   }

@@ -12,13 +12,11 @@
 		<link>http://www.newsjack.in</link>
 		<description>All the News You'd Love to See</description>
 		<?php
-			if(isset($_GET['c'])) {
+			if(isset($_GET['c']))
 				$campaign = Campaign::getObjectByCode($_GET['c']);
-				$remixes = Remix::getObjectsByCampaignID($campaign?$campaign->getItemID():0);
-			}
-			else
-				$remixes = Remix::getAllObjects();
-
+			
+			$remixes = Remix::getObjectsByCampaignID($campaign?$campaign->getItemID():Remix::CAMPAIGN_ALL, 10);
+			
 			foreach($remixes as $remix) {
 				if($remix->getRemixURL() == "")
 					continue;

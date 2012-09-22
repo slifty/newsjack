@@ -16,6 +16,7 @@ class Remix extends FactoryObject{
 	// Initialization Types
 	const INIT_EMPTY = -1;
 	const INIT_DEFAULT = 0;
+	const CAMPAIGN_ALL = 0;
 	
 	
 	# Instance Variables
@@ -197,16 +198,21 @@ class Remix extends FactoryObject{
 	public function setRemixURL($str) { $this->remixURL = $str; }
 	
 	# Static Methods
-	public static function getObjectsByCampaignID($int) {
+	public static function getObjectsByCampaignID($campaignID, $quantity = FactoryObject::LIMIT_ALL) {
 		$query_string = "SELECT remixes.id as itemID 
 						   FROM remixes
-						  WHERE remixes.campaign_id = ".DBConn::clean($int);
-		return Remix::getObjects($query_string);
+						  ".($campaignID==Remix::CAMPAIGN_ALL?"":"WHERE remixes.campaign_id = ".DBConn::clean($campaignID))."
+					   ORDER BY remixes.id desc";
+		if($quantity == FactoryObject::LIMIT_ALL)
+			return Remix::getObjects($query_string);
+			
+		return Remix::getObjects($query_string, 0, $quantity);
 	}
 	
 	public static function getAllObjects() {
 		$query_string = "SELECT remixes.id as itemID 
-						   FROM remixes";
+						   FROM remixes
+					   ORDER BY remixes.id";
 		return Remix::getObjects($query_string);
 	}
 }
