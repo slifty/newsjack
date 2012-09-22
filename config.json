@@ -1,10 +1,6 @@
 {
-<<<<<<< HEAD
   "port": 8000,
   "staticFilesDir": "static-files/hackasaurus",
-=======
-  "staticFilesDir": "static-files",
->>>>>>> hackasaurus/master
   "indexFile": "/index.html",
   "compiledFile": "/webxray.js",
   "compiledFileParts": [
