@@ -95,10 +95,27 @@
 
     removeOnUnload = removeOnUnload.add([cssLink.get(0), active.get(0)]);
 
+	console.log("FIND ME AND DESTROY ME");
+	//window.campaignId = 1;
+	
     var cssLoaded = waitForCSSToLoad();
     var prefsLoaded = waitForPreferencesToLoad();
+	
+	// Load localization mods (for some reason the main page doesn't load locales in the same way as everything else)
+	var modsLoaded = jQuery.Deferred();
+	jQuery.ajax({
+		url: "api/localeMods.php?c=" + window.campaignId,
+		dataType: "jsonp",
+		complete: function(jqXHR, textStatus) {
+			modsLoaded.resolve();
+			console.log("done");
+		},
+		success: function(data) {
+			jQuery.localization.createMods(data);
+		}
+    });
     
-    jQuery.when(prefsLoaded, cssLoaded).done(cb);
+    jQuery.when(prefsLoaded, cssLoaded, modsLoaded).done(cb);
   }
 
   function loadPlugins(cb) {

@@ -13,10 +13,6 @@ include_once("FactoryObject.php");
 class Cache extends FactoryObject{
 	
 	# Constants
-	// Initialization Types
-	const INIT_EMPTY = -1;
-	const INIT_DEFAULT = 0;
-	
 	
 	# Instance Variables
 	private $cachedHTML; // string
@@ -24,7 +20,7 @@ class Cache extends FactoryObject{
 	private $dateCreated; // timestamp
 	
 	
-	public function __construct($itemID = Remix::INIT_EMPTY) {
+	public function __construct($itemID = FactoryObject::INIT_EMPTY) {
 		$dataArrays = static::gatherData((int)$itemID);
 		$this->load($dataArrays[0]);
 	}
@@ -34,7 +30,7 @@ class Cache extends FactoryObject{
 		$dataArrays = array();
 		
 		// Load an empty object
-		if($objectString === Remix::INIT_EMPTY) {
+		if($objectString === FactoryObject::INIT_EMPTY) {
 			$dataArray = array();
 			$dataArray['itemID'] = 0;
 			$dataArray['cachedHTML'] = "";
@@ -45,7 +41,7 @@ class Cache extends FactoryObject{
 		}
 		
 		// Load a default object
-		if($objectString === Remix::INIT_DEFAULT) {
+		if($objectString === FactoryObject::INIT_DEFAULT) {
 			$dataArray = array();
 			$dataArray['itemID'] = 0;
 			$dataArray['cachedHTML'] = "";

@@ -13,9 +13,6 @@ include_once("FactoryObject.php");
 class Remix extends FactoryObject{
 	
 	# Constants
-	// Initialization Types
-	const INIT_EMPTY = -1;
-	const INIT_DEFAULT = 0;
 	const CAMPAIGN_ALL = 0;
 	
 	
@@ -26,9 +23,9 @@ class Remix extends FactoryObject{
 	private $remixDOM; // string
 	private $remixURL; // string
 	private $dateCreated; // timestamp
+		
 	
-	
-	public function __construct($itemID = Remix::INIT_EMPTY) {
+	public function __construct($itemID = FactoryObject::INIT_EMPTY) {
 		$dataArrays = static::gatherData((int)$itemID);
 		$this->load($dataArrays[0]);
 	}
@@ -38,7 +35,7 @@ class Remix extends FactoryObject{
 		$dataArrays = array();
 		
 		// Load an empty object
-		if($objectString === Remix::INIT_EMPTY) {
+		if($objectString === FactoryObject::INIT_EMPTY) {
 			$dataArray = array();
 			$dataArray['itemID'] = 0;
 			$dataArray['campaignID'] = 0;
@@ -52,7 +49,7 @@ class Remix extends FactoryObject{
 		}
 		
 		// Load a default object
-		if($objectString === Remix::INIT_DEFAULT) {
+		if($objectString === FactoryObject::INIT_DEFAULT) {
 			$dataArray = array();
 			$dataArray['itemID'] = 0;
 			$dataArray['campaignID'] = 0;

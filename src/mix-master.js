@@ -197,7 +197,8 @@
                 languages: jQuery.locale.languages,
                 startHTML: startHTML,
                 mods: dialogPageMods,
-                baseURI: document.location.href
+                baseURI: document.location.href,
+				campaignId: "TEST"
               }), "*");
               dialog.iframe.fadeIn();
               dialog.iframe.bind("message", function onMessage(event, data) {

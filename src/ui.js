@@ -11,7 +11,7 @@
   
   function addPublishButton(hud, input) {
     var publish = $('<div class="webxray-base webxray-publish">Share Remix</div>');
-    publish.click(function() {input.showUprootDialog(input)});    
+    publish.click(function() {jQuery.openUprootDialog(input)});    
     $(hud.overlayContainer).append(publish);
   }
   

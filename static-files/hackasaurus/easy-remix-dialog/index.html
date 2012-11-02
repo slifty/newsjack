@@ -447,8 +447,6 @@ function createDialog(data) {
 }
 
 $(window).ready(function() {
-  //$(document.body).hide();
-
   var isInIframe = !(top === self);
   var responseSent = false;
   var isStarted = false;
@@ -461,7 +459,8 @@ $(window).ready(function() {
         jQuery.locale = locale;
         $(document.body).localize(locale, "mix-master-dialog");
         loadDialog(data);
-      }
+      },
+      campaignId: data.campaignId
     });
   }
   

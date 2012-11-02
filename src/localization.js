@@ -39,19 +39,23 @@
       for (var name in obj)
         this[language][scope + ":" + name] = obj[name];
     },
+	createMods: function createMods(mods) {
+		this.mods = mods;
+	},
     createLocale: function createLocale(languages) {
       // We especially want to do this in the case where the client
       // is just passing in navigator.language, which is all lowercase
       // in Safari.
       languages = languages.map(normalizeLanguage);
-
       var locale = {
         languages: languages,
         has: function has(scopedName) {
           return (scopedName in locale);
         },
         get: function get(scopedName) {
-          return locale[scopedName] || "unable to find locale string " + 
+	      if(jQuery.localization.mods && jQuery.localization.mods[scopedName])
+			return jQuery.localization.mods[scopedName];
+          return  locale[scopedName] || "unable to find locale string " + 
                  scopedName;
         },
         scope: function scopeLocale(scope) {
@@ -72,6 +76,23 @@
       
       return locale;
     },
+    loadMods: function loadMods(languages) {
+      var deferreds = [];
+      var languages = options.languages.map(normalizeLanguage);
+	  
+      languages.forEach(function(language) {
+        var deferred = jQuery.Deferred();
+        jQuery.ajax({
+		  async: false,
+          url: "/api/localeMods.php?c=" + options.campaignId,
+          dataType: "script",
+          complete: function(jqXHR, textStatus) {
+            deferred.resolve(language, textStatus);
+          }
+        });
+        deferreds.push(deferred);
+      });
+	},
     loadLocale: function(options) {
       var deferreds = [];
       var languages = options.languages.map(normalizeLanguage);
@@ -87,8 +108,10 @@
         });
         deferreds.push(deferred);
       });
+
       jQuery.when.apply(jQuery, deferreds).done(function() {
         var locale = jQuery.localization.createLocale(languages);
+		
         options.complete(locale, arguments);
       });
     },

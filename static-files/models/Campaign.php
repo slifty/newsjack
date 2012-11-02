@@ -9,22 +9,22 @@
 ###
 
 include_once("FactoryObject.php");
+include_once("LocaleMod.php");
 
 class Campaign extends FactoryObject{
 	
 	# Constants
-	// Initialization Types
-	const INIT_EMPTY = -1;
-	const INIT_DEFAULT = 0;
-	
 	
 	# Instance Variables
 	private $code; // string
-	private $localeID; // string
-	private $logoURL; // timestamp
+	private $cssURL; // string
+	private $title; // string
+	private $description; // string
 	
+	# Caches
+	private $localeMods; // array
 	
-	public function __construct($itemID = Remix::INIT_EMPTY) {
+	public function __construct($itemID = FactoryObject::INIT_EMPTY) {
 		$dataArrays = static::gatherData((int)$itemID);
 		$this->load($dataArrays[0]);
 	}
@@ -34,24 +34,26 @@ class Campaign extends FactoryObject{
 		$dataArrays = array();
 		
 		// Load an empty object
-		if($objectString === Remix::INIT_EMPTY) {
+		if($objectString === FactoryObject::INIT_EMPTY) {
 			$dataArray = array();
 			$dataArray['itemID'] = 0;
 			$dataArray['code'] = "";
-			$dataArray['localeID'] = 0;
-			$dataArray['logoURL'] = "";
+			$dataArray['cssURL'] = "";
+			$dataArray['title'] = "";
+			$dataArray['description'] = "";
 			$dataArray['dateCreated'] = 0;
 			$dataArrays[] = $dataArray;
 			return $dataArrays;
 		}
 		
 		// Load a default object
-		if($objectString === Remix::INIT_DEFAULT) {
+		if($objectString === FactoryObject::INIT_DEFAULT) {
 			$dataArray = array();
 			$dataArray['itemID'] = 0;
 			$dataArray['code'] = "";
-			$dataArray['logoURL'] = 0;
-			$dataArray['localeID'] = "";
+			$dataArray['cssURL'] = "";
+			$dataArray['title'] = "";
+			$dataArray['description'] = "";
 			$dataArray['dateCreated'] = 0;
 			$dataArrays[] = $dataArray;
 			return $dataArrays;
@@ -63,8 +65,9 @@ class Campaign extends FactoryObject{
 		// Load the object data
 		$queryString = "SELECT campaigns.id AS itemID,
 							   campaigns.code AS code,
-							   campaigns.logo_url AS logoURL,
-							   campaigns.locale_id AS localeID,
+							   campaigns.css_url AS cssURL,
+							   campaigns.title AS title,
+							   campaigns.description AS description,
 							   unix_timestamp(campaigns.date_created) AS dateCreated
 						  FROM campaigns
 						 WHERE campaigns.id IN (".$objectString.")";
@@ -80,8 +83,9 @@ class Campaign extends FactoryObject{
 			$dataArray = array();
 			$dataArray['itemID'] = $resultArray['itemID'];
 			$dataArray['code'] = $resultArray['code'];
-			$dataArray['logoURL'] = $resultArray['logoURL'];
-			$dataArray['localeID'] = $resultArray['localeID'];
+			$dataArray['cssURL'] = $resultArray['cssURL'];
+			$dataArray['title'] = $resultArray['title'];
+			$dataArray['description'] = $resultArray['description'];
 			$dataArray['dateCreated'] = $resultArray['dateCreated'];
 			$dataArrays[] = $dataArray;
 		}
@@ -93,9 +97,13 @@ class Campaign extends FactoryObject{
 	public function load($dataArray) {
 		$this->itemID = isset($dataArray["itemID"])?$dataArray["itemID"]:0;
 		$this->code = isset($dataArray["code"])?$dataArray["code"]:"";
-		$this->logoURL = isset($dataArray["logoURL"])?$dataArray["logoURL"]:"";
-		$this->localeID = isset($dataArray["localeID"])?$dataArray["localeID"]:"";
+		$this->cssURL = isset($dataArray["cssURL"])?$dataArray["cssURL"]:"";
+		$this->title = isset($dataArray["title"])?$dataArray["title"]:"";
+		$this->description = isset($dataArray["description"])?$dataArray["description"]:"";
 		$this->dateCreated = isset($dataArray["dateCreated"])?$dataArray["dateCreated"]:0;
+		
+		// Caches
+		$this->localeMods = isset($dataArray["localeMods"])?$dataArray["localeMods"]:null;
 	}
 	
 	
@@ -113,8 +121,9 @@ class Campaign extends FactoryObject{
 			// Update an existing record
 			$queryString = "UPDATE campaigns
 							   SET campaigns.code = ".DBConn::clean($this->getCode()).",
-								   campaigns.logo_url = ".DBConn::clean($this->getLogoURL()).",
-								   campaigns.locale_id = ".DBConn::clean($this->getLocaleID())."
+								   campaigns.css_url = ".DBConn::clean($this->getCssURL()).",
+								   campaigns.title = ".DBConn::clean($this->getTitle()).",
+								   campaigns.description = ".DBConn::clean($this->getDescription())."
 							 WHERE campaigns.id = ".DBConn::clean($this->getItemID());
 			
 			$mysqli->query($queryString);
@@ -123,13 +132,15 @@ class Campaign extends FactoryObject{
 			$queryString = "INSERT INTO campaigns
 								   (campaigns.id,
 									campaigns.code,
-									campaigns.logo_url,
-									campaigns.locale_id,
+									campaigns.css_url,
+									campaigns.title,
+									campaigns.description,
 									campaigns.date_created)
 							VALUES (0,
 									".DBConn::clean($this->getCode()).",
-									".DBConn::clean($this->getLogoURL()).",
-									".DBConn::clean($this->getLocaleID()).",
+									".DBConn::clean($this->getCssURL()).",
+									".DBConn::clean($this->getTitle()).",
+									".DBConn::clean($this->getDescription()).",
 									NOW())";
 			
 			$mysqli->query($queryString);
@@ -155,19 +166,31 @@ class Campaign extends FactoryObject{
 	# Getters
 	public function getCode() { return $this->code; }
 	
-	public function getLogoURL() { return $this->logoURL; }
+	public function getCssURL() { return $this->cssURL; }
 	
-	public function getLocaleID() { return $this->localeID; }
+	public function getTitle() { return $this->title; }
+	
+	public function getDescription() { return $this->description; }
 	
 	public function getDateCreated() { return $this->dateCreated; }
+	
+	public function getLocaleMods() {
+		// Check cache first
+		if(!is_null($this->localeMods)) return $this->localeMods;
+		
+		$this->localeMods = LocaleMod::getObjectsByCampaignID($this->getItemID());
+		return $this->localeMods;
+	}
 	
 	
 	# Setters
 	public function setCode($str) { $this->code = $str; }
 	
-	public function setLogoURL($str) { $this->logoURL = $str; }
+	public function setCssURL($str) { $this->cssURL = $str; }
 	
-	public function setLocaleID($int) { $this->localeID = $int; }
+	public function setTitle($str) { $this->title = $str; }
+	
+	public function setDescription($str) { $this->description = $str; }
 	
 	
 	# Static Methods
@@ -176,6 +199,10 @@ class Campaign extends FactoryObject{
 						   FROM campaigns
 						  WHERE campaigns.code = ".DBConn::clean($code);
 		return array_pop(Campaign::getObjects($query_string));
+	}
+	
+	public static function getObjects($start=FactoryObject::LIMIT_BEGINNING, $length=FactoryObject::LIMIT_ALL) {
+		return parent::getObjects("select id from campaigns",$start, $length);
 	}
 }
 ?>

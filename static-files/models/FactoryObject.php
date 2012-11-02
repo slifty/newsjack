@@ -71,7 +71,7 @@ abstract class FactoryObject {
 		$data_arrays = static::gatherData((int)$objectSelector);
 		
 		if(sizeof($data_arrays) == 0)
-			return new static();
+			return null;
 		
 		$newObject = new static();
 		$newObject->load($data_arrays[0]);

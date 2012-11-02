@@ -40,6 +40,7 @@ def find_locales(dirname, domain):
 def locale_exists(locale, dirname, domain):
     pofile = os.path.join(dirname, locale, 'LC_MESSAGES',
                           '%s.po' % domain)
+    print pofile
     return os.path.exists(pofile)
 
 def hyphenate(locale):

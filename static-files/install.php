@@ -117,6 +117,54 @@ switch($version) {
 		echo("Updating app version\n");
 		$mysqli->query("UPDATE appinfo set version ='6';") or print($mysqli->error);
 	
+	case '6':
+		echo("Deleting locales table\n");
+		$mysqli->query("drop TABLE locales") or print($mysqli->error);
+		
+		echo("Creating locale_mods table\n");
+		$mysqli->query("CREATE TABLE locale_mods (id int auto_increment primary key,
+											campaign_id text,
+											language text,
+											mod_key text,
+											mod_value text,
+											date_created datetime)") or print($mysqli->error);
+											
+		echo("Updating campaigns table\n");
+		$mysqli->query("ALTER TABLE campaigns
+			             DROP COLUMN locale_id,
+			             DROP COLUMN logo_url,
+						  ADD COLUMN css_url varchar(255) AFTER code") or print($mysqli->error);
+	
+		echo("Updating app version\n");
+		$mysqli->query("UPDATE appinfo set version ='7';") or print($mysqli->error);
+	
+	case '7':
+		echo("Updating campaigns table\n");
+		$mysqli->query("ALTER TABLE campaigns
+			              ADD COLUMN title text AFTER css_url") or print($mysqli->error);
+		
+		echo("Updating app version\n");
+		$mysqli->query("UPDATE appinfo set version ='8';") or print($mysqli->error);
+	
+	case '8':
+		echo("Creating users table\n");
+		$mysqli->query("CREATE TABLE users (id int auto_increment primary key,
+											username varchar(64),
+											password char(64),
+											type text,
+											date_created datetime)") or print($mysqli->error);
+		
+		echo("Updating app version\n");
+		$mysqli->query("UPDATE appinfo set version ='9';") or print($mysqli->error);
+
+	case '9':
+		echo("Updating campaigns table\n");
+		$mysqli->query("ALTER TABLE campaigns
+			              ADD COLUMN description text AFTER title") or print($mysqli->error);
+		
+		echo("Updating app version\n");
+		$mysqli->query("UPDATE appinfo set version ='10';") or print($mysqli->error);
+		
 	default:
 		echo("Finished updating the schema\n");
 }

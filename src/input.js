@@ -336,23 +336,16 @@
           }
         },
         {
-          key: 'ESC',
-          cmd: 'quit',
-          alwaysInToolbar: true,
-          execute: function() {
-            if (onQuit) onQuit();
-          }
-        },
-        {
           key: 'R',
           cmd: 'remix',
+		  neverInToolbar: true,
           execute: function() {
             mixMaster.replaceFocusedElementWithDialog({
               input: self,
               dialogURL: jQuery.webxraySettings.url("easyRemixDialogURL"),
               sendFullDocument: true
             });
-          }
+          },
         },
         {
           key: 'C',
@@ -400,7 +393,7 @@
         {
           key: 'P',
           cmd: 'uproot',
-          alwaysInToolbar: true,
+		  neverInToolbar: true,
           execute: function() {
             persistence.saveHistoryToDOM();
             jQuery.openUprootDialog(self);

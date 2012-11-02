@@ -37,7 +37,7 @@
       var shortDescriptions = locale.scope('short-command-descriptions');
 
       input.keyboardHelp.forEach(function(binding) {
-        if (binding.execute && (canBeTouched() || binding.alwaysInToolbar))
+        if (binding.execute && (canBeTouched() || binding.alwaysInToolbar) && !binding.neverInToolbar)
           makeButton(jQuery.nameForKey(binding.key, locale, platform),
                      shortDescriptions(binding.cmd), function() {
                        binding.execute();
