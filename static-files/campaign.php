@@ -9,10 +9,10 @@
 	$mods = array(
 		"introduction:headline" => null,
 		"introduction:explanation" => null,
-		"a" => null,
-		"b" => null,
-		"c" => null,
-		"d" => null,
+		"mix-master-dialog:title" => null,
+		"mix-master-dialog:html-header" => null,
+		"dropdown:headline" => null,
+		"dropdown:explanation" => null,
 	);
 	
 	// Are we loading an existing campaign?
@@ -47,6 +47,13 @@
 			if($_POST[$key] == "")
 				$mods[$key]->delete();
 		}
+		
+		if(isset($_POST['delete'])) {
+			$campaign->delete();
+		}
+		
+		header("Location: campaign.php?c=".$campaign->getItemId());
+		exit();
 	}
 ?>
 
@@ -82,10 +89,10 @@
 			<ul>
 				<li><label for="introduction:headline">Instruction Title:</label><input type="text" name="introduction:headline" id="introduction:headline" value="<?= $mods["introduction:headline"]?$mods["introduction:headline"]->getModValue():""; ?>" /><div class="note"></div></li>
 				<li><label for="introduction:explanation">Instruction Description:</label><input type="text" name="introduction:explanation" id="introduction:explanation" value="<?= $mods["introduction:explanation"]?$mods["introduction:explanation"]->getModValue():""; ?>" /><div class="note"></div></li>
-				<li><label for="">Remix Title:</label><input type="text" name="" id="" /><div class="note"></div></li>
-				<li><label for="">Remix Subtitle:</label><input type="text" name="" id="" /><div class="note"></div></li>
-				<li><label for="">Dropdown Headline:</label><input type="text" name="" id="" /><div class="note"></div></li>
-				<li><label for="">Dropdown Description:</label><input type="text" name="" id="" /><div class="note"></div></li>
+				<li><label for="mix-master-dialog:title">Remix Title:</label><input type="text" name="mix-master-dialog:title" id="mix-master-dialog:title" value="<?= $mods["mix-master-dialog:title"]?$mods["mix-master-dialog:title"]->getModValue():""; ?>" /><div class="note"></div></li>
+				<li><label for="mix-master-dialog:html-header">Remix Subtitle:</label><input type="text" name="mix-master-dialog:html-header" id="mix-master-dialog:html-header" value="<?= $mods["mix-master-dialog:html-header"]?$mods["mix-master-dialog:html-header"]->getModValue():""; ?>" /><div class="note"></div></li>
+				<li><label for="dropdown:headline">Dropdown Headline:</label><input type="text" name="dropdown:headline" id="dropdown:headline" value="<?= $mods["dropdown:headline"]?$mods["dropdown:headline"]->getModValue():""; ?>" /><div class="note"></div></li>
+				<li><label for="dropdown:explanation">Dropdown Description:</label><input type="text" name="dropdown:explanation" id="dropdown:explanation" value="<?= $mods["dropdown:explanation"]?$mods["dropdown:explanation"]->getModValue():""; ?>" /><div class="note"></div></li>
 			</ul>
 			
 			<h2>Limit Tags</h2>
@@ -97,7 +104,10 @@
 				<li><input type="checkbox" name="" id="" value="" /><label for="">Images</label></li>
 				<li><input type="checkbox" name="" id="" value="" /><label for="">Lists</label></li>
 			</ul>
-			<input type="submit" />
+			<input type="submit" name="save" value="save"/>
+			<?PHP if($campaign->getItemID() != 0) { ?>
+			<input type="submit" name="delete" value="delete"/>
+			<?PHP } ?>
 		</form>
 		<?PHP include("includes/footer.php"); ?>
 	</body>

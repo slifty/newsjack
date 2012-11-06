@@ -198,7 +198,7 @@
                 startHTML: startHTML,
                 mods: dialogPageMods,
                 baseURI: document.location.href,
-				campaignId: "TEST"
+				campaignId: window.campaignId
               }), "*");
               dialog.iframe.fadeIn();
               dialog.iframe.bind("message", function onMessage(event, data) {

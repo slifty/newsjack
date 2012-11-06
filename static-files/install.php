@@ -165,6 +165,15 @@ switch($version) {
 		echo("Updating app version\n");
 		$mysqli->query("UPDATE appinfo set version ='10';") or print($mysqli->error);
 		
+	case '10':
+		echo("Updating remixes table\n");
+		$mysqli->query("ALTER TABLE remixes
+			              ADD COLUMN img_url text AFTER remix_url,
+			              ADD COLUMN is_featured text AFTER remix_url") or print($mysqli->error);
+		
+		echo("Updating app version\n");
+		$mysqli->query("UPDATE appinfo set version ='11';") or print($mysqli->error);
+		
 	default:
 		echo("Finished updating the schema\n");
 }

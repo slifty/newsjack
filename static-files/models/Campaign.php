@@ -160,6 +160,10 @@ class Campaign extends FactoryObject{
 						 WHERE campaigns.id = ".DBConn::clean($this->getItemID());
 		$mysqli->query($queryString);
 		
+		// Selete locale mods
+		foreach($this->getLocaleMods() as $localeMod) {
+			$localeMod->delete();
+		}
 	}
 	
 	

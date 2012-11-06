@@ -4,6 +4,9 @@
   var $ = jQuery;
   var removeOnUnload = $();
   
+  //if($("#newsjack-screenshot").length == 0)
+  	//$("body").children().wrapAll("<div id='newsjack-screenshot' />");
+
   function getMyScript() {
     return $('script.webxray, script[src$="webxray.js"]');
   }
@@ -95,20 +98,14 @@
 
     removeOnUnload = removeOnUnload.add([cssLink.get(0), active.get(0)]);
 
-	console.log("FIND ME AND DESTROY ME");
-	//window.campaignId = 1;
-	
     var cssLoaded = waitForCSSToLoad();
     var prefsLoaded = waitForPreferencesToLoad();
-	
-	// Load localization mods (for some reason the main page doesn't load locales in the same way as everything else)
-	var modsLoaded = jQuery.Deferred();
+	var modsLoaded = jQuery.Deferred();	 // Load localization mods (for some reason the main page doesn't load locales in the same way as everything else)
 	jQuery.ajax({
 		url: "api/localeMods.php?c=" + window.campaignId,
 		dataType: "jsonp",
 		complete: function(jqXHR, textStatus) {
 			modsLoaded.resolve();
-			console.log("done");
 		},
 		success: function(data) {
 			jQuery.localization.createMods(data);

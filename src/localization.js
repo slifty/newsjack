@@ -26,6 +26,7 @@
         var scopedName = $(this).attr("data-l10n");
         if (scopedName.indexOf(':') == -1)
           scopedName = defaultScope + ':' + scopedName;
+		
         $(this).text(locale.get(scopedName));
       });
     }
@@ -53,7 +54,7 @@
           return (scopedName in locale);
         },
         get: function get(scopedName) {
-	      if(jQuery.localization.mods && jQuery.localization.mods[scopedName])
+		  if(jQuery.localization.mods && jQuery.localization.mods[scopedName])
 			return jQuery.localization.mods[scopedName];
           return  locale[scopedName] || "unable to find locale string " + 
                  scopedName;
@@ -76,27 +77,26 @@
       
       return locale;
     },
-    loadMods: function loadMods(languages) {
-      var deferreds = [];
-      var languages = options.languages.map(normalizeLanguage);
-	  
-      languages.forEach(function(language) {
-        var deferred = jQuery.Deferred();
-        jQuery.ajax({
-		  async: false,
-          url: "/api/localeMods.php?c=" + options.campaignId,
-          dataType: "script",
-          complete: function(jqXHR, textStatus) {
-            deferred.resolve(language, textStatus);
-          }
-        });
-        deferreds.push(deferred);
-      });
-	},
     loadLocale: function(options) {
       var deferreds = [];
       var languages = options.languages.map(normalizeLanguage);
-
+	  
+	  var campaignId = window.campaignId || options.campaignId;
+	  if(campaignId) {
+	  	  var modsLoaded = jQuery.Deferred();
+		  jQuery.ajax({
+			url: options.root + "api/localeMods.php?c=" + campaignId,
+			dataType: "jsonp",
+			complete: function(jqXHR, textStatus) {
+				modsLoaded.resolve();
+			},
+			success: function(data) {
+				jQuery.localization.createMods(data);
+			}
+	      });
+	      deferreds.push(modsLoaded);
+      }
+	
       languages.forEach(function(language) {
         var deferred = jQuery.Deferred();
         jQuery.ajax({

@@ -21,22 +21,50 @@
         var hackpubInfo = {
           injectURL: injectURL,
           originalURL: remix_url,
-          submissionDate: (new Date()).toString()
+          submissionDate: (new Date()).toString(),
+		  dropdownExplanation: jQuery.locale.get('dropdown:explanation'),
+		  dropdownTitle: jQuery.locale.get('dropdown:headline')
         };
-        html += '<script>hackpubInfo = ' + JSON.stringify(hackpubInfo) +
-                '</script>';
+		
+        html += '<script>hackpubInfo = ' + JSON.stringify(hackpubInfo) + '</script>';
         html += '<script src="' + injectURL + '"></script>';
-        jQuery.simpleModalDialog({
-          input: input,
-          url: jQuery.webxraySettings.url("uprootDialogURL"),
-          payload: JSON.stringify({
-            html: html,
-            hackpubURL: jQuery.webxraySettings.url("hackpubURL"),
-            originalURL: hackpubInfo.originalURL,
-            languages: jQuery.locale.languages,
-            remix_id: remix_id
-          })
-        });
+		
+		$(".webxray-hud-box").hide();
+		$(".webxray-toolbar").hide();
+		var html2obj = html2canvas($('body'), {
+			proxy: "proxy.php",
+			logging: true,
+			onrendered: function(canvas) {
+				var img = canvas.toDataURL();
+				$.ajax({
+					url: "api/saveimg.php",
+					type: "POST",
+					data: {
+						'r': remix_id,
+						'source':img
+					},
+					success: function(data) {
+						var imgURL = data;
+						jQuery.simpleModalDialog({
+				          input: input,
+				          url: jQuery.webxraySettings.url("uprootDialogURL"),
+				          payload: JSON.stringify({
+				            html: html,
+				            hackpubURL: jQuery.webxraySettings.url("hackpubURL"),
+				            imgURL: imgURL,
+				            originalURL: hackpubInfo.originalURL,
+				            languages: jQuery.locale.languages,
+				            remix_id: remix_id
+				          })
+						});
+						
+						console.log(imgURL);
+					}
+				});
+				$(".webxray-hud-box").show();
+				$(".webxray-toolbar").show();
+			}
+		});
       });
     }
   });

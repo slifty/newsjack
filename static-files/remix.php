@@ -62,7 +62,7 @@
 	$url = get_final_url($url);
 	
 	// Check if this is a campaign
-	$campaign =  Campaign::getObjectByCode(isset($_GET['c'])?$_GET['c']:"");
+	$campaign =  Campaign::getObject(isset($_GET['c'])?$_GET['c']:"");
 	
 	
 	// Is this cached?
@@ -132,7 +132,11 @@
 	$remix->save();
 	
 	// Add in the NewsJack code
-	$injection = '<script type="text/javascript" src="hackasaurus/webxray.js" class="webxray"></script><script type="text/javascript">var remix_id = '.$remix->getItemID().';var remix_url = "'.$remix->getOriginalURL().'";var campaignId="'.(isset($_GET['c'])?$_GET['c']:"").'";</script>';
+	$injection  = '<script type="text/javascript" src="hackasaurus/webxray.js" class="webxray"></script>';
+	$injection .= '<script type="text/javascript">var remix_id = '.$remix->getItemID().';var remix_url = "'.$remix->getOriginalURL().'";var campaignId="'.(isset($_GET['c'])?$_GET['c']:"").'";</script>';
+	$injection .= '<script type="text/javascript" src="scripts/html2canvas.js" charset="utf-8"></script>';
+
+	$data = str_replace("<body>","<body>", $data);
 	$data = str_replace("</body>",$injection."</body>", $data);
 	
 	echo $data;

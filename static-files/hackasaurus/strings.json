@@ -17,6 +17,10 @@
   "input": {
     "unload-blocked": "You have made unsaved changes to this page."
   },
+  "dropdown": {
+    "headline": "You've been NewsJacked!  OR HAVE YOU",
+    "explanation": "NewsJack is a media remixing tool built from Mozilla's <a href=\"http://hackasaurus.org/\">Hackasaurus</a> by <a href=\"http://slifty.com\">slifty</a> and <a href=\"http://schock.cc\">schock</a>"
+  },
   "command-manager": {
     "executed": "Executed",
     "undid": "Undid",

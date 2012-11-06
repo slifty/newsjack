@@ -454,3 +454,7 @@ div.webxray-toolbar-button-glyph-tiny {
   background-color: yellow;
   color: black;
 }
+
+.webxray-screenshot-hidden {
+	display: none;
+}

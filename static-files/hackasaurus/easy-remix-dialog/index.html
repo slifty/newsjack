@@ -160,22 +160,22 @@ span.sample {
 <div class="container">
 <div id="buttons">
   <div class="close-button" id="nevermind"
-   data-l10n="dialog-common:nevermind">Nevermind</div>
-  <div class="ok-button" id="ok" data-l10n="dialog-common:ok">Ok</div>
+   data-l10n="dialog-common:nevermind"></div>
+  <div class="ok-button" id="ok" data-l10n="dialog-common:ok"></div>
 </div>
-<div id="header"><h1 class="title"><span data-l10n="dialog-common:product-name">NewsJack</span> <span class="subtitle" data-l10n="title">Define Your Agenda</span></h1></div>
+<div id="header"><h1 class="title"><span data-l10n="dialog-common:product-name"></span> <span class="subtitle" data-l10n="title"></span></h1></div>
 <div id="dom-rendering-column">
-  <h2 data-l10n="html-header">Edit the News</h2>
+  <h2 data-l10n="html-header"></h2>
   <div class="tabs">
     <div class="tab selected" id="pretty"
-     data-l10n="basic-source-tab">Basic</div>
+     data-l10n="basic-source-tab"></div>
     <div class="tab" id="raw"
-     data-l10n="advanced-source-tab">Advanced</div>
+     data-l10n="advanced-source-tab"></div>
   </div>
   <div id="dom-rendering"></div>
 </div>
 <div id="preview-column">
-  <h2 data-l10n="rendering-header">Preview</h2>
+  <h2 data-l10n="rendering-header"></h2>
   <iframe id="preview" scrolling="no" src="blank.html"></iframe>
 </div>
 </div>
@@ -454,6 +454,7 @@ $(window).ready(function() {
   function onMessage(data) {
     jQuery.localization.loadLocale({
       path: "../src/locale/",
+      root: "../../",
       languages: data.languages,
       complete: function(locale) {
         jQuery.locale = locale;
@@ -468,8 +469,6 @@ $(window).ready(function() {
     if (isStarted)
       return;
     isStarted = true;
-    
-    //$(document.body).show();
 
     var dialog = createDialog(data);
 
@@ -486,8 +485,6 @@ $(window).ready(function() {
     var mods = data.mods || {};
     jQuery.loadStylesheets(mods.stylesheets || []);
     jQuery.loadScripts(mods.scripts || []);
-
-    //$(document.body).hide().fadeIn();    
   }
   
   if (isInIframe) {

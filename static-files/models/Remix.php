@@ -22,6 +22,8 @@ class Remix extends FactoryObject{
 	private $originalURL; // string
 	private $remixDOM; // string
 	private $remixURL; // string
+	private $imgURL; // string
+	private $isFeatured; // bool
 	private $dateCreated; // timestamp
 		
 	
@@ -43,6 +45,8 @@ class Remix extends FactoryObject{
 			$dataArray['originalURL'] = "";
 			$dataArray['remixDOM'] = "";
 			$dataArray['remixURL'] = "";
+			$dataArray['imgURL'] = "";
+			$dataArray['isFeatured'] = "";
 			$dataArray['dateCreated'] = 0;
 			$dataArrays[] = $dataArray;
 			return $dataArrays;
@@ -57,6 +61,8 @@ class Remix extends FactoryObject{
 			$dataArray['originalURL'] = "";
 			$dataArray['remixDOM'] = "";
 			$dataArray['remixURL'] = "";
+			$dataArray['imgURL'] = "";
+			$dataArray['isFeatured'] = "";
 			$dataArray['dateCreated'] = 0;
 			$dataArrays[] = $dataArray;
 			return $dataArrays;
@@ -72,6 +78,8 @@ class Remix extends FactoryObject{
 							   remixes.original_url AS originalURL,
 							   remixes.remix_dom AS remixDOM,
 							   remixes.remix_url AS remixURL,
+							   remixes.img_url AS imgURL,
+							   remixes.is_featured AS isFeatured,
 							   unix_timestamp(remixes.date_created) AS dateCreated
 						  FROM remixes
 						 WHERE remixes.id IN (".$objectString.")";
@@ -91,6 +99,8 @@ class Remix extends FactoryObject{
 			$dataArray['originalURL'] = $resultArray['originalURL'];
 			$dataArray['remixDOM'] = $resultArray['remixDOM'];
 			$dataArray['remixURL'] = $resultArray['remixURL'];
+			$dataArray['imgURL'] = $resultArray['imgURL'];
+			$dataArray['isFeatured'] = $resultArray['isFeatured'];
 			$dataArray['dateCreated'] = $resultArray['dateCreated'];
 			$dataArrays[] = $dataArray;
 		}
@@ -106,6 +116,8 @@ class Remix extends FactoryObject{
 		$this->originalURL = isset($dataArray["originalURL"])?$dataArray["originalURL"]:"";
 		$this->remixDOM = isset($dataArray["remixDOM"])?$dataArray["remixDOM"]:"";
 		$this->remixURL = isset($dataArray["remixURL"])?$dataArray["remixURL"]:"";
+		$this->imgURL = isset($dataArray["imgURL"])?$dataArray["imgURL"]:"";
+		$this->isFeatured = isset($dataArray["isFeatured"])?$dataArray["isFeatured"]:"";
 		$this->dateCreated = isset($dataArray["dateCreated"])?$dataArray["dateCreated"]:0;
 	}
 	
@@ -127,7 +139,9 @@ class Remix extends FactoryObject{
 								   remixes.original_dom = ".DBConn::clean($this->getOriginalDOM()).",
 								   remixes.original_url = ".DBConn::clean($this->getOriginalURL()).",
 								   remixes.remix_dom = ".DBConn::clean($this->getRemixDOM()).",
-								   remixes.remix_url = ".DBConn::clean($this->getRemixURL())."
+								   remixes.remix_url = ".DBConn::clean($this->getRemixURL()).",
+								   remixes.img_url = ".DBConn::clean($this->getImgURL()).",
+								   remixes.is_featured = ".DBConn::clean($this->getIsFeatured())."
 							 WHERE remixes.id = ".DBConn::clean($this->getItemID());
 			
 			$mysqli->query($queryString);
@@ -140,6 +154,8 @@ class Remix extends FactoryObject{
 									remixes.original_url,
 									remixes.remix_dom,
 									remixes.remix_url,
+									remixes.img_url,
+									remixes.is_featured,
 									remixes.date_created)
 							VALUES (0,
 									".DBConn::clean($this->getCampaignID()).",
@@ -147,6 +163,8 @@ class Remix extends FactoryObject{
 									".DBConn::clean($this->getOriginalURL()).",
 									".DBConn::clean($this->getRemixDOM()).",
 									".DBConn::clean($this->getRemixURL()).",
+									".DBConn::clean($this->getImgURL()).",
+									".DBConn::clean($this->getIsFeatured()).",
 									NOW())";
 			
 			$mysqli->query($queryString);
@@ -180,6 +198,10 @@ class Remix extends FactoryObject{
 	
 	public function getRemixURL() { return $this->remixURL; }
 	
+	public function getImgURL() { return $this->imgURL; }
+	
+	public function getIsFeatured() { return $this->isFeatured; }
+	
 	public function getDateCreated() { return $this->dateCreated; }
 	
 	
@@ -194,16 +216,20 @@ class Remix extends FactoryObject{
 	
 	public function setRemixURL($str) { $this->remixURL = $str; }
 	
+	public function setImgURL($str) { $this->imgURL = $str; }
+	
+	public function setIsFeatured($bool) { $this->isFeatured = $bool; }
+	
+	
 	# Static Methods
-	public static function getObjectsByCampaignID($campaignID, $quantity = FactoryObject::LIMIT_ALL) {
+	public static function getObjectsByCampaignID($campaignID, $start=FactoryObject::LIMIT_BEGINNING, $quantity = FactoryObject::LIMIT_ALL) {
 		$query_string = "SELECT remixes.id as itemID 
 						   FROM remixes
-						  ".($campaignID==Remix::CAMPAIGN_ALL?"":"WHERE remixes.campaign_id = ".DBConn::clean($campaignID))."
+						  WHERE (remixes.campaign_id = ".DBConn::clean($campaignID)." OR ".DBConn::clean($campaignID)."=".DBConn::clean(Remix::CAMPAIGN_ALL).")
+						    AND (remixes.remix_url != '')
 					   ORDER BY remixes.id desc";
-		if($quantity == FactoryObject::LIMIT_ALL)
-			return Remix::getObjects($query_string);
-			
-		return Remix::getObjects($query_string, 0, $quantity);
+		
+		return Remix::getObjects($query_string, $start, $quantity);
 	}
 	
 	public static function getAllObjects() {

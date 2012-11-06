@@ -89,6 +89,9 @@ div.publish-option p {
 	<div class="twitter-share">
 		<a id="twitter_share" type="button" target="_blank"><img src="../images/twitter.jpg" alt="Tweet"></a>
 	</div>
+	<div class="img-share">
+		<a id="img_share" type="button" target="_blank">Save as an image!</a>
+	</div>
   </div>
 </div>
 <div id="view-html" style="display: none;">
@@ -123,7 +126,7 @@ function DeferredPublish(html, originalURL, hackpubURL) {
   });
 }
 
-function setupUI(html, originalURL, hackpubURL) {
+function setupUI(html, originalURL, hackpubURL, imgURL) {
   $(".to-internet.big-button").click(function() {
     $("#choose-publish-method").fadeOut(function() {
       $("#to-internet").fadeIn(function() {
@@ -145,12 +148,13 @@ function setupUI(html, originalURL, hackpubURL) {
 						$(".published-url a").attr("href", url).text(url);
 						$("#fb_share").attr("href", "http://www.facebook.com/sharer.php?src=sp&u=" + encodeURI(url));
 						$("#twitter_share").attr("href","https://twitter.com/intent/tweet?text=Breaking%20News!&url=" + encodeURI(url));
+						$("#img_share").attr("href", "../" + imgURL);
 						$("#to-internet .finished").fadeIn();
 						$.ajax({
 							url: "../api/storage.php",
 							method: "GET",
 							data: {
-								r: remix_id,
+								r: window.remix_id,
 								url: url
 							}
 						});
@@ -174,7 +178,7 @@ function setupUI(html, originalURL, hackpubURL) {
  $(".to-internet.big-button").click();
 }
 
-function init(html, originalURL, hackpubURL) {
+function init(html, originalURL, hackpubURL, imgURL) {
   var ppxURL = "http://toolness.github.com/postmessage-proxied-xhr/";
 
   yepnope({
@@ -183,7 +187,7 @@ function init(html, originalURL, hackpubURL) {
     complete: function() {
       if (!jQuery.support.cors)
         jQuery.proxyAjaxThroughPostMessage(hackpubURL + 'ppx-server');
-      setupUI(html, originalURL, hackpubURL);
+      setupUI(html, originalURL, hackpubURL, imgURL);
     }
   });
 }
@@ -213,8 +217,9 @@ if (top === self) {
       window.parent.postMessage("close", "*");
     });  
     var data = JSON.parse(event.data);
+	window.remix_id = data.remix_id;
     loadLocalization(data.languages, function() {
-      init(data.html, data.originalURL, data.hackpubURL, data.remix_id);
+      init(data.html, data.originalURL, data.hackpubURL, data.imgURL);
     });
   }, false);
 </script>
